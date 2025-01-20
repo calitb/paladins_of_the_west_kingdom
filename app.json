@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Paladines",
-    "slug": "Paladines",
+    "slug": "paladins-of-the-west-kingdom",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -36,6 +36,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "f9b103e5-86da-4504-a054-299ed09fc53e"
+      }
+    },
+    "owner": "calitb-org"
   }
 }
