@@ -1,43 +1,81 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import { Image, ImageSource } from "expo-image";
+import { Tabs } from "expo-router";
+import { useAtomValue } from "jotai";
+import React from "react";
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { HapticTab } from "@/components/HapticTab";
+import { Colors } from "@/constants/Colors";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { gameAtom } from "@/state/atoms/game";
 
 export default function TabLayout() {
+  const game = useAtomValue(gameAtom);
+
   const colorScheme = useColorScheme();
+
+  const renderIcon = (params: { color: string }, source: ImageSource) => {
+    return (
+      <Image
+        className="h-7 w-7"
+        style={{
+          width: 28,
+          height: 28,
+          tintColor: params.color,
+        }}
+        tintColor={params.color}
+        source={source}
+      />
+    );
+  };
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: game.players[0].name ?? "Jugador 1",
+          tabBarIcon: (color) =>
+            renderIcon(color, require("@/images/icons/user.svg")),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="player2"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: game.players[1].name ?? "Jugador 2",
+          tabBarIcon: (color) =>
+            renderIcon(color, require("@/images/icons/user.svg")),
+        }}
+      />
+      <Tabs.Screen
+        name="player3"
+        options={{
+          title: game.players[2]?.name ?? "Jugador 3",
+          tabBarIcon: (color) =>
+            renderIcon(color, require("@/images/icons/user.svg")),
+          href: game.players.length > 2 ? undefined : null,
+        }}
+      />
+      <Tabs.Screen
+        name="player4"
+        options={{
+          title: game.players[3]?.name ?? "Jugador 4",
+          tabBarIcon: (color) =>
+            renderIcon(color, require("@/images/icons/user.svg")),
+          href: game.players.length === 4 ? undefined : null,
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: "Ajustes",
+          tabBarIcon: (color) =>
+            renderIcon(color, require("@/images/icons/cog-8-tooth.svg")),
         }}
       />
     </Tabs>
