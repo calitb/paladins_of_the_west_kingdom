@@ -1,0 +1,30 @@
+{
+  "short_name": "Paladins",
+  "name": "Paladins of the West Kingdom",
+  "icons": [
+    {
+      "src": "logo120.png",
+      "type": "image/png",
+      "sizes": "120x120"
+    },
+    {
+      "src": "logo180.png",
+      "type": "image/png",
+      "sizes": "180x180"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
