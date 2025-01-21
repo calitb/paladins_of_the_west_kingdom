@@ -23,33 +23,35 @@ export default function VictoryPointsItem({ title, values, vp, vpDetails, onPres
 
   return (
     <Item>
-      <View className="flex-row items-center gap-4">
+      <View className={"flex-row items-center gap-2"}>
         {values != null && (
-          <>
+          <View className="flex-row gap-2">
             {values.map((value, index) => (
               <Pressable key={index} onPress={() => onPressValue?.(index)}>
                 <ValueBox value={value} color="gray" onPressValue={undefined} />
               </Pressable>
             ))}
-          </>
+          </View>
         )}
-        <Text
-          className="text-xl"
-          style={{
-            color: Colors[colorScheme ?? "light"].text,
-          }}
-        >
-          {title}
-        </Text>
-        {vpDetails != null && (
-          <>
-            {vpDetails.map((value, index) => (
-              <Pressable key={index} onPress={() => onPressVPDetails?.(index)}>
-                <VictoryPoint key={index} value={value} size="small" />
-              </Pressable>
-            ))}
-          </>
-        )}
+        <View className={(vpDetails?.length ?? 0) > 2 ? "justify-center" : "flex-row items-center gap-2"}>
+          <Text
+            className="text-xl"
+            style={{
+              color: Colors[colorScheme ?? "light"].text,
+            }}
+          >
+            {title}
+          </Text>
+          {vpDetails != null && (
+            <View className="flex-row gap-4">
+              {vpDetails.map((value, index) => (
+                <Pressable key={index} onPress={() => onPressVPDetails?.(index)}>
+                  <VictoryPoint key={index} value={value} size="small" />
+                </Pressable>
+              ))}
+            </View>
+          )}
+        </View>
       </View>
       {vp != null && (
         <View className="flex-row">
@@ -69,7 +71,7 @@ type VictoryPointProps = {
 
 export function VictoryPoint({ value, size = "normal" }: VictoryPointProps) {
   return (
-    <View className={twMerge("relative", size === "small" ? "w-8 h-8" : "w-12 h-12")}>
+    <View className={twMerge("relative", size === "small" ? "w-8 h-8" : "w-11 h-11")}>
       <Image
         className="absolute inset-0"
         style={{
