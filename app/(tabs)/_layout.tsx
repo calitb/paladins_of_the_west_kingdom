@@ -18,8 +18,6 @@ export default function TabLayout() {
       <Image
         className="h-7 w-7"
         style={{
-          width: 28,
-          height: 28,
           tintColor: params.color,
         }}
         tintColor={params.color}
@@ -40,24 +38,21 @@ export default function TabLayout() {
         name="index"
         options={{
           title: game.players[0].name ?? "Jugador 1",
-          tabBarIcon: (color) =>
-            renderIcon(color, require("@/images/icons/user.svg")),
+          tabBarIcon: (color) => renderIcon(color, require("@/images/icons/user.svg")),
         }}
       />
       <Tabs.Screen
         name="player2"
         options={{
           title: game.players[1].name ?? "Jugador 2",
-          tabBarIcon: (color) =>
-            renderIcon(color, require("@/images/icons/user.svg")),
+          tabBarIcon: (color) => renderIcon(color, require("@/images/icons/user.svg")),
         }}
       />
       <Tabs.Screen
         name="player3"
         options={{
           title: game.players[2]?.name ?? "Jugador 3",
-          tabBarIcon: (color) =>
-            renderIcon(color, require("@/images/icons/user.svg")),
+          tabBarIcon: (color) => renderIcon(color, require("@/images/icons/user.svg")),
           href: game.players.length > 2 ? undefined : null,
         }}
       />
@@ -65,8 +60,7 @@ export default function TabLayout() {
         name="player4"
         options={{
           title: game.players[3]?.name ?? "Jugador 4",
-          tabBarIcon: (color) =>
-            renderIcon(color, require("@/images/icons/user.svg")),
+          tabBarIcon: (color) => renderIcon(color, require("@/images/icons/user.svg")),
           href: game.players.length === 4 ? undefined : null,
         }}
       />
@@ -74,8 +68,7 @@ export default function TabLayout() {
         name="settings"
         options={{
           title: "Ajustes",
-          tabBarIcon: (color) =>
-            renderIcon(color, require("@/images/icons/cog-8-tooth.svg")),
+          tabBarIcon: (color) => renderIcon(color, require("@/images/icons/cog-8-tooth.svg")),
         }}
       />
     </Tabs>

@@ -1,6 +1,7 @@
 import { Image } from "expo-image";
 import React from "react";
 import { Pressable, Text, View } from "react-native";
+import { twMerge } from "tailwind-merge";
 
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -22,7 +23,7 @@ export default function VictoryPointsItem({ title, values, vp, vpDetails, onPres
 
   return (
     <Item>
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+      <View className="flex-row items-center gap-4">
         {values != null && (
           <>
             {values.map((value, index) => (
@@ -33,8 +34,8 @@ export default function VictoryPointsItem({ title, values, vp, vpDetails, onPres
           </>
         )}
         <Text
+          className="text-xl"
           style={{
-            fontSize: 20,
             color: Colors[colorScheme ?? "light"].text,
           }}
         >
@@ -51,7 +52,7 @@ export default function VictoryPointsItem({ title, values, vp, vpDetails, onPres
         )}
       </View>
       {vp != null && (
-        <View style={{ flexDirection: "row" }}>
+        <View className="flex-row">
           {vp.map((value, index) => (
             <VictoryPoint key={index} value={value} />
           ))}
@@ -68,38 +69,17 @@ type VictoryPointProps = {
 
 export function VictoryPoint({ value, size = "normal" }: VictoryPointProps) {
   return (
-    <View
-      style={{
-        position: "relative",
-        width: size === "small" ? 30 : 50,
-        height: size === "small" ? 30 : 50,
-      }}
-    >
+    <View className={twMerge("relative", size === "small" ? "w-8 h-8" : "w-12 h-12")}>
       <Image
+        className="absolute inset-0"
         style={{
-          position: "absolute",
-          inset: 0,
           tintColor: "yellow",
         }}
         tintColor="yellow"
         source={require("@/images/icons/bookmark.svg")}
       />
-      <View
-        style={{
-          position: "absolute",
-          inset: 0,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Text
-          style={{
-            fontSize: size === "small" ? 12 : 16,
-            fontWeight: "bold",
-          }}
-        >
-          {value}
-        </Text>
+      <View className="absolute inset-0 items-center justify-center">
+        <Text className={twMerge("font-bold", size === "small" ? "text-xs" : "text-base")}>{value}</Text>
       </View>
     </View>
   );

@@ -32,8 +32,8 @@ export default function PlayerScreen(props: Props) {
   }>();
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView style={{ flex: 1, backgroundColor: "gray", gap: 10 }}>
+    <SafeAreaView className="flex-1">
+      <ScrollView className="flex-1 gap-2 bg-gray-400">
         {!player.isHuman && (
           <MedidorAtributos
             title="Marcador de Recursos"
@@ -233,8 +233,7 @@ export default function PlayerScreen(props: Props) {
           black={player.acciones.absolver + player.acciones.guarnecer}
           blue={player.acciones.comisionar + player.acciones.atacar}
         />
-        <View style={{ backgroundColor: "gray", height: 10 }} />
-
+        <View className="bg-gray-400 h-2" />
         <VictoryPointsItem
           title="Medidor de Atributos"
           vp={[
@@ -466,7 +465,7 @@ export default function PlayerScreen(props: Props) {
         )}
       </ScrollView>
       <View>
-        <View style={{ backgroundColor: "gray", height: 10 }} />
+        <View className="bg-gray-400 h-2" />
         <MedidorAtributos
           title="Medidor de Atributos"
           red={getMedidorAtributos(player).red}
@@ -501,28 +500,18 @@ function ModalSingleValue({ title, value: inputValue, onSave }: ModalProps) {
   const colorScheme = useColorScheme();
 
   return (
-    <View
-      style={{
-        position: "fixed",
-        inset: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.65)",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <View className="absolute inset-0 justify-center items-center bg-black/65">
       <View
+        className="p-5 gap-2 border"
         style={{
           backgroundColor: Colors[colorScheme ?? "light"].background,
-          padding: 20,
-          gap: 10,
-          borderWidth: 1,
           borderColor: Colors[colorScheme ?? "light"].text,
         }}
       >
-        <Text style={{ fontSize: 20, color: Colors[colorScheme ?? "light"].text }}>
+        <Text className="text-xl" style={{ color: Colors[colorScheme ?? "light"].text }}>
           {title}: {value}
         </Text>
-        <View style={{ flexDirection: "row", gap: 10 }}>
+        <View className="flex-row gap-2">
           <Button title="Remove" onPress={() => setValue((value) => value - 1)} />
           <Button title="Add" onPress={() => setValue((value) => value + 1)} />
           <Button

@@ -11,15 +11,9 @@ export default function Item({ children }: Props) {
   const colorScheme = useColorScheme();
   return (
     <View
+      className="flex-row justify-between items-center py-1 px-2 border"
       style={{
         backgroundColor: Colors[colorScheme ?? "light"].background,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        borderWidth: 1,
-        borderRadius: 2,
         borderColor: Colors[colorScheme ?? "light"].text,
       }}
     >
