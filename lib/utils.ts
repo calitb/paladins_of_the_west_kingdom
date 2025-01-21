@@ -1,14 +1,14 @@
 import type { Actions, Game } from "./type";
 
-export function getNumeroConversiones(player: Game["players"][number]) {
+export function getNumberOfConversions(player: Game["players"][number]) {
   return player.acciones.convertir.reduce((acc: number, item) => (item == null ? acc : acc + 1), 0);
 }
 
-export function getMedidorAtributos(player: Game["players"][number]) {
+export function getAttributesTotals(player: Game["players"][number]) {
   return {
     red:
       player.acciones.fortificar +
-      getNumeroConversiones(player) +
+      getNumberOfConversions(player) +
       player.atributosExtras.aldeanos.red +
       player.atributosExtras.forasteros.red +
       player.atributosExtras.fortificaciones.red +
@@ -28,8 +28,8 @@ export function getMedidorAtributos(player: Game["players"][number]) {
   };
 }
 
-export function getOrdenDelReyPV(player: Game["players"][number], orden: Actions | undefined, pv: number) {
-  return (orden === "convertir" && getNumeroConversiones(player) >= 5) ||
+export function getKingsOrderVictoryPoints(player: Game["players"][number], orden: Actions | undefined, pv: number) {
+  return (orden === "convertir" && getNumberOfConversions(player) >= 5) ||
     (orden === "fortificar" && player.acciones.fortificar >= 5) ||
     (orden === "guarnecer" && player.acciones.guarnecer >= 5) ||
     (orden === "absolver" && player.acciones.absolver >= 5) ||
@@ -39,7 +39,7 @@ export function getOrdenDelReyPV(player: Game["players"][number], orden: Actions
     : 0;
 }
 
-export function getAttributePV(value: number) {
+export function getAttributeVictoryPoints(value: number) {
   return value >= 12
     ? 20
     : value === 11
@@ -59,7 +59,7 @@ export function getAttributePV(value: number) {
                   : 0;
 }
 
-export function getActionPV(player: Game["players"][number], action: Actions) {
+export function getActionVictoryPoints(player: Game["players"][number], action: Actions) {
   if (action === "comisionar") {
     return player.acciones.comisionar === 5
       ? 2
@@ -107,32 +107,32 @@ export function getActionPV(player: Game["players"][number], action: Actions) {
   return 0;
 }
 
-export function getVictoryPoints(player: Game["players"][number], ordenes: Game["ordenesDelRey"]): number {
-  const ordenesDelRey =
-    getOrdenDelReyPV(player, ordenes.lower, 4) +
-    getOrdenDelReyPV(player, ordenes.medium, 6) +
-    getOrdenDelReyPV(player, ordenes.upper, 8);
+export function getVictoryPoints(player: Game["players"][number], ordenes: Game["kingsOrders"]): number {
+  const kingsOrders =
+    getKingsOrderVictoryPoints(player, ordenes.lower, 4) +
+    getKingsOrderVictoryPoints(player, ordenes.medium, 6) +
+    getKingsOrderVictoryPoints(player, ordenes.upper, 8);
 
   const deudas = player.deudasPagadas - player.deudasPendientes * 3;
   const plataProvisiones = Math.floor((player.plata + player.provisiones) / 3);
 
-  const attributes = getMedidorAtributos(player);
-  const red = getAttributePV(attributes.red);
-  const blue = getAttributePV(attributes.blue);
-  const black = getAttributePV(attributes.black);
+  const attributes = getAttributesTotals(player);
+  const red = getAttributeVictoryPoints(attributes.red);
+  const blue = getAttributeVictoryPoints(attributes.blue);
+  const black = getAttributeVictoryPoints(attributes.black);
 
-  const comisionar = getActionPV(player, "comisionar");
-  const guarnecer = getActionPV(player, "guarnecer");
-  const absolver = getActionPV(player, "absolver");
-  const fortificar = getActionPV(player, "fortificar");
-  const desarrollar = getActionPV(player, "desarrollar");
-  const convertir = getActionPV(player, "convertir");
+  const comisionar = getActionVictoryPoints(player, "comisionar");
+  const guarnecer = getActionVictoryPoints(player, "guarnecer");
+  const absolver = getActionVictoryPoints(player, "absolver");
+  const fortificar = getActionVictoryPoints(player, "fortificar");
+  const desarrollar = getActionVictoryPoints(player, "desarrollar");
+  const convertir = getActionVictoryPoints(player, "convertir");
 
   return (
     red +
     blue +
     black +
-    ordenesDelRey +
+    kingsOrders +
     deudas +
     comisionar +
     absolver +

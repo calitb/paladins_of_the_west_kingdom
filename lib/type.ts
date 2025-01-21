@@ -1,6 +1,6 @@
 export type Actions = "convertir" | "fortificar" | "guarnecer" | "absolver" | "atacar" | "comisionar" | "desarrollar";
 
-type OrdenesDelRey = {
+type KingsOrders = {
   lower: Actions | undefined;
   medium: Actions | undefined;
   upper: Actions | undefined;
@@ -40,5 +40,5 @@ type Player = {
 
 export type Game = {
   players: Player[];
-  ordenesDelRey: OrdenesDelRey;
+  kingsOrders: KingsOrders;
 };

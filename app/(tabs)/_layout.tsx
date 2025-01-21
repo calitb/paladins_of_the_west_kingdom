@@ -6,10 +6,10 @@ import React from "react";
 import { HapticTab } from "@/components/HapticTab";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { gameAtom } from "@/state/atoms/game";
+import { playersAtom } from "@/state/atoms/game";
 
 export default function TabLayout() {
-  const game = useAtomValue(gameAtom);
+  const players = useAtomValue(playersAtom);
 
   const colorScheme = useColorScheme();
 
@@ -37,31 +37,31 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: game.players[0].name ?? "Jugador 1",
+          title: players[0].name ?? "Jugador 1",
           tabBarIcon: (color) => renderIcon(color, require("@/images/icons/user.svg")),
         }}
       />
       <Tabs.Screen
         name="player2"
         options={{
-          title: game.players[1].name ?? "Jugador 2",
+          title: players[1].name ?? "Jugador 2",
           tabBarIcon: (color) => renderIcon(color, require("@/images/icons/user.svg")),
         }}
       />
       <Tabs.Screen
         name="player3"
         options={{
-          title: game.players[2]?.name ?? "Jugador 3",
+          title: players[2]?.name ?? "Jugador 3",
           tabBarIcon: (color) => renderIcon(color, require("@/images/icons/user.svg")),
-          href: game.players.length > 2 ? undefined : null,
+          href: players.length > 2 ? undefined : null,
         }}
       />
       <Tabs.Screen
         name="player4"
         options={{
-          title: game.players[3]?.name ?? "Jugador 4",
+          title: players[3]?.name ?? "Jugador 4",
           tabBarIcon: (color) => renderIcon(color, require("@/images/icons/user.svg")),
-          href: game.players.length === 4 ? undefined : null,
+          href: players.length === 4 ? undefined : null,
         }}
       />
       <Tabs.Screen

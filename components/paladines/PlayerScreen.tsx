@@ -1,3 +1,4 @@
+import { useAtom, useAtomValue } from "jotai";
 import { useState } from "react";
 import { Button, SafeAreaView, ScrollView, Text, View } from "react-native";
 
@@ -5,25 +6,31 @@ import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import type { Game } from "@/lib/type";
 import {
-  getActionPV,
-  getAttributePV,
-  getMedidorAtributos,
-  getNumeroConversiones,
-  getOrdenDelReyPV,
+  getActionVictoryPoints,
+  getAttributeVictoryPoints,
+  getAttributesTotals,
+  getKingsOrderVictoryPoints,
+  getNumberOfConversions,
   getVictoryPoints,
 } from "@/lib/utils";
+import { kingsOrdersAtom, playersAtom } from "@/state/atoms/game";
 
 import MedidorAtributos from "./MedidorDeAtributo";
 import VictoryPointsItem from "./VictoryPointsItem";
 
 type Props = {
-  player: Game["players"][number];
-  ordenesDelRey: Game["ordenesDelRey"];
+  playerIndex: number;
 };
 
-export default function PlayerScreen(props: Props) {
-  const [player, setPlayer] = useState(props.player);
-  const { ordenesDelRey } = props;
+export default function PlayerScreen({ playerIndex }: Props) {
+  const [players, setPlayers] = useAtom(playersAtom);
+  const kingsOrders = useAtomValue(kingsOrdersAtom);
+
+  const player = players[playerIndex];
+
+  const setPlayer = (newPlayer: Game["players"][number]) => {
+    setPlayers(players.map((p, i) => (i === playerIndex ? newPlayer : p)));
+  };
 
   const [modalProps, setModalProps] = useState<{
     handler: (value: number) => void;
@@ -56,29 +63,29 @@ export default function PlayerScreen(props: Props) {
                       : player.marcadorDeRecursos.blue,
                 handler: (value: number) => {
                   if (index === 0) {
-                    setPlayer((prev) => ({
-                      ...prev,
+                    setPlayer({
+                      ...player,
                       marcadorDeRecursos: {
-                        ...prev.marcadorDeRecursos,
+                        ...player.marcadorDeRecursos,
                         red: value,
                       },
-                    }));
+                    });
                   } else if (index === 1) {
-                    setPlayer((prev) => ({
-                      ...prev,
+                    setPlayer({
+                      ...player,
                       marcadorDeRecursos: {
-                        ...prev.marcadorDeRecursos,
+                        ...player.marcadorDeRecursos,
                         black: value,
                       },
-                    }));
+                    });
                   } else {
-                    setPlayer((prev) => ({
-                      ...prev,
+                    setPlayer({
+                      ...player,
                       marcadorDeRecursos: {
-                        ...prev.marcadorDeRecursos,
+                        ...player.marcadorDeRecursos,
                         blue: value,
                       },
-                    }));
+                    });
                   }
                 },
               });
@@ -102,38 +109,38 @@ export default function PlayerScreen(props: Props) {
                       : player.atributosExtras.aldeanos.blue,
                 handler: (value: number) => {
                   if (index === 0) {
-                    setPlayer((prev) => ({
-                      ...prev,
+                    setPlayer({
+                      ...player,
                       atributosExtras: {
-                        ...prev.atributosExtras,
+                        ...player.atributosExtras,
                         aldeanos: {
-                          ...prev.atributosExtras.aldeanos,
+                          ...player.atributosExtras.aldeanos,
                           red: value,
                         },
                       },
-                    }));
+                    });
                   } else if (index === 1) {
-                    setPlayer((prev) => ({
-                      ...prev,
+                    setPlayer({
+                      ...player,
                       atributosExtras: {
-                        ...prev.atributosExtras,
+                        ...player.atributosExtras,
                         aldeanos: {
-                          ...prev.atributosExtras.aldeanos,
+                          ...player.atributosExtras.aldeanos,
                           black: value,
                         },
                       },
-                    }));
+                    });
                   } else {
-                    setPlayer((prev) => ({
-                      ...prev,
+                    setPlayer({
+                      ...player,
                       atributosExtras: {
-                        ...prev.atributosExtras,
+                        ...player.atributosExtras,
                         aldeanos: {
-                          ...prev.atributosExtras.aldeanos,
+                          ...player.atributosExtras.aldeanos,
                           blue: value,
                         },
                       },
-                    }));
+                    });
                   }
                 },
               });
@@ -151,27 +158,27 @@ export default function PlayerScreen(props: Props) {
               value: index === 0 ? player.atributosExtras.forasteros.red : player.atributosExtras.forasteros.blue,
               handler: (value: number) => {
                 if (index === 0) {
-                  setPlayer((prev) => ({
-                    ...prev,
+                  setPlayer({
+                    ...player,
                     atributosExtras: {
-                      ...prev.atributosExtras,
+                      ...player.atributosExtras,
                       forasteros: {
-                        ...prev.atributosExtras.forasteros,
+                        ...player.atributosExtras.forasteros,
                         red: value,
                       },
                     },
-                  }));
+                  });
                 } else {
-                  setPlayer((prev) => ({
-                    ...prev,
+                  setPlayer({
+                    ...player,
                     atributosExtras: {
-                      ...prev.atributosExtras,
+                      ...player.atributosExtras,
                       forasteros: {
-                        ...prev.atributosExtras.forasteros,
+                        ...player.atributosExtras.forasteros,
                         blue: value,
                       },
                     },
-                  }));
+                  });
                 }
               },
             });
@@ -187,16 +194,16 @@ export default function PlayerScreen(props: Props) {
               title: "Fortificaciones (Fuerza)",
               value: player.atributosExtras.fortificaciones.red,
               handler: (value: number) => {
-                setPlayer((prev) => ({
-                  ...prev,
+                setPlayer({
+                  ...player,
                   atributosExtras: {
-                    ...prev.atributosExtras,
+                    ...player.atributosExtras,
                     fortificaciones: {
-                      ...prev.atributosExtras.fortificaciones,
+                      ...player.atributosExtras.fortificaciones,
                       red: value,
                     },
                   },
-                }));
+                });
               },
             });
           }}
@@ -212,16 +219,16 @@ export default function PlayerScreen(props: Props) {
                 title: "Absolver (Fe)",
                 value: player.atributosExtras.absolver.black,
                 handler: (value: number) => {
-                  setPlayer((prev) => ({
-                    ...prev,
+                  setPlayer({
+                    ...player,
                     atributosExtras: {
-                      ...prev.atributosExtras,
+                      ...player.atributosExtras,
                       absolver: {
-                        ...prev.atributosExtras.absolver,
+                        ...player.atributosExtras.absolver,
                         black: value,
                       },
                     },
-                  }));
+                  });
                 },
               });
             }}
@@ -229,7 +236,7 @@ export default function PlayerScreen(props: Props) {
         )}
         <MedidorAtributos
           title="Tablero de Acciones"
-          red={player.acciones.fortificar + getNumeroConversiones(player)}
+          red={player.acciones.fortificar + getNumberOfConversions(player)}
           black={player.acciones.absolver + player.acciones.guarnecer}
           blue={player.acciones.comisionar + player.acciones.atacar}
         />
@@ -237,17 +244,17 @@ export default function PlayerScreen(props: Props) {
         <VictoryPointsItem
           title="Medidor de Atributos"
           vp={[
-            getAttributePV(getMedidorAtributos(player).red),
-            getAttributePV(getMedidorAtributos(player).black),
-            getAttributePV(getMedidorAtributos(player).blue),
+            getAttributeVictoryPoints(getAttributesTotals(player).red),
+            getAttributeVictoryPoints(getAttributesTotals(player).black),
+            getAttributeVictoryPoints(getAttributesTotals(player).blue),
           ]}
         />
         <VictoryPointsItem
           title="Órdenes del Rey"
           vp={[
-            getOrdenDelReyPV(player, ordenesDelRey.lower, 4),
-            getOrdenDelReyPV(player, ordenesDelRey.medium, 6),
-            getOrdenDelReyPV(player, ordenesDelRey.upper, 8),
+            getKingsOrderVictoryPoints(player, kingsOrders.lower, 4),
+            getKingsOrderVictoryPoints(player, kingsOrders.medium, 6),
+            getKingsOrderVictoryPoints(player, kingsOrders.upper, 8),
           ]}
         />
         <VictoryPointsItem
@@ -259,15 +266,15 @@ export default function PlayerScreen(props: Props) {
               value: index === 0 ? player.deudasPagadas : player.deudasPendientes,
               handler: (value: number) => {
                 if (index === 0) {
-                  setPlayer((prev) => ({
-                    ...prev,
+                  setPlayer({
+                    ...player,
                     deudasPagadas: value,
-                  }));
+                  });
                 } else {
-                  setPlayer((prev) => ({
-                    ...prev,
+                  setPlayer({
+                    ...player,
                     deudasPendientes: value,
-                  }));
+                  });
                 }
               },
             });
@@ -282,17 +289,17 @@ export default function PlayerScreen(props: Props) {
               title: "Comisionar",
               value: player.acciones.comisionar,
               handler: (value: number) => {
-                setPlayer((prev) => ({
-                  ...prev,
+                setPlayer({
+                  ...player,
                   acciones: {
-                    ...prev.acciones,
+                    ...player.acciones,
                     comisionar: value,
                   },
-                }));
+                });
               },
             });
           }}
-          vp={[getActionPV(player, "comisionar")]}
+          vp={[getActionVictoryPoints(player, "comisionar")]}
         />
         <VictoryPointsItem
           title="Absolver"
@@ -302,17 +309,17 @@ export default function PlayerScreen(props: Props) {
               title: "Absolver",
               value: player.acciones.absolver,
               handler: (value: number) => {
-                setPlayer((prev) => ({
-                  ...prev,
+                setPlayer({
+                  ...player,
                   acciones: {
-                    ...prev.acciones,
+                    ...player.acciones,
                     absolver: value,
                   },
-                }));
+                });
               },
             });
           }}
-          vp={[getActionPV(player, "absolver")]}
+          vp={[getActionVictoryPoints(player, "absolver")]}
         />
         <VictoryPointsItem
           title="Fortificar"
@@ -322,17 +329,17 @@ export default function PlayerScreen(props: Props) {
               title: "Fortificar",
               value: player.acciones.fortificar,
               handler: (value: number) => {
-                setPlayer((prev) => ({
-                  ...prev,
+                setPlayer({
+                  ...player,
                   acciones: {
-                    ...prev.acciones,
+                    ...player.acciones,
                     fortificar: value,
                   },
-                }));
+                });
               },
             });
           }}
-          vp={[getActionPV(player, "fortificar")]}
+          vp={[getActionVictoryPoints(player, "fortificar")]}
         />
         <VictoryPointsItem
           title="Fortificar (PV Extras)"
@@ -341,10 +348,10 @@ export default function PlayerScreen(props: Props) {
               title: "Fortificar (PV Extras)",
               value: player.fortificarPV,
               handler: (value: number) => {
-                setPlayer((prev) => ({
-                  ...prev,
+                setPlayer({
+                  ...player,
                   fortificarPV: value,
-                }));
+                });
               },
             });
           }}
@@ -359,13 +366,13 @@ export default function PlayerScreen(props: Props) {
               title: "Atacar",
               value: player.acciones.atacar,
               handler: (value: number) => {
-                setPlayer((prev) => ({
-                  ...prev,
+                setPlayer({
+                  ...player,
                   acciones: {
-                    ...prev.acciones,
+                    ...player.acciones,
                     atacar: value,
                   },
-                }));
+                });
               },
             });
           }}
@@ -378,39 +385,39 @@ export default function PlayerScreen(props: Props) {
               title: "Guarnecer",
               value: player.acciones.guarnecer,
               handler: (value: number) => {
-                setPlayer((prev) => ({
-                  ...prev,
+                setPlayer({
+                  ...player,
                   acciones: {
-                    ...prev.acciones,
+                    ...player.acciones,
                     guarnecer: value,
                   },
-                }));
+                });
               },
             });
           }}
-          vp={[getActionPV(player, "guarnecer")]}
+          vp={[getActionVictoryPoints(player, "guarnecer")]}
         />
         <VictoryPointsItem
           title="Convertir"
-          vp={[getActionPV(player, "convertir")]}
+          vp={[getActionVictoryPoints(player, "convertir")]}
           vpDetails={player.acciones.convertir}
           onPressVPDetails={(index: number) => {
             setModalProps({
               title: "Convertir",
               value: player.acciones.convertir[index] != null ? player.acciones.convertir[index] : -1,
               handler: (value: number) => {
-                setPlayer((prev) => ({
-                  ...prev,
+                setPlayer({
+                  ...player,
                   acciones: {
-                    ...prev.acciones,
-                    convertir: prev.acciones.convertir.map((c, i) => {
+                    ...player.acciones,
+                    convertir: player.acciones.convertir.map((c, i) => {
                       if (i === index) {
                         return value < 0 ? undefined : value;
                       }
                       return c;
                     }),
                   },
-                }));
+                });
               },
             });
           }}
@@ -424,17 +431,17 @@ export default function PlayerScreen(props: Props) {
                 title: "Desarrollar",
                 value: player.acciones.desarrollar,
                 handler: (value: number) => {
-                  setPlayer((prev) => ({
-                    ...prev,
+                  setPlayer({
+                    ...player,
                     acciones: {
-                      ...prev.acciones,
+                      ...player.acciones,
                       desarrollar: value,
                     },
-                  }));
+                  });
                 },
               });
             }}
-            vp={[getActionPV(player, "desarrollar")]}
+            vp={[getActionVictoryPoints(player, "desarrollar")]}
           />
         )}
         {player.isHuman && (
@@ -447,15 +454,15 @@ export default function PlayerScreen(props: Props) {
                 value: index === 0 ? player.plata : player.provisiones,
                 handler: (value: number) => {
                   if (index === 0) {
-                    setPlayer((prev) => ({
-                      ...prev,
+                    setPlayer({
+                      ...player,
                       plata: value,
-                    }));
+                    });
                   } else {
-                    setPlayer((prev) => ({
-                      ...prev,
+                    setPlayer({
+                      ...player,
                       provisiones: value,
-                    }));
+                    });
                   }
                 },
               });
@@ -468,11 +475,11 @@ export default function PlayerScreen(props: Props) {
         <View className="bg-gray-400 h-2" />
         <MedidorAtributos
           title="Medidor de Atributos"
-          red={getMedidorAtributos(player).red}
-          black={getMedidorAtributos(player).black}
-          blue={getMedidorAtributos(player).blue}
+          red={getAttributesTotals(player).red}
+          black={getAttributesTotals(player).black}
+          blue={getAttributesTotals(player).blue}
         />
-        <VictoryPointsItem title="Puntos de Victoria" vp={[getVictoryPoints(player, ordenesDelRey)]} />
+        <VictoryPointsItem title="Puntos de Victoria" vp={[getVictoryPoints(player, kingsOrders)]} />
       </View>
       {modalProps && (
         <ModalSingleValue
