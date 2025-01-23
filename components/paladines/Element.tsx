@@ -1,5 +1,5 @@
 import { Image, ImageSource } from "expo-image";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import React from "react";
 import { Pressable, Text, View } from "react-native";
 
@@ -10,7 +10,7 @@ import {
   getAttributeVictoryPoints,
   getKingsOrderVictoryPoints,
 } from "@/lib/utils";
-import { kingsOrdersAtom, playersAtom } from "@/state/atoms/game";
+import { kingsOrdersAtom } from "@/state/atoms/game";
 
 import Counter from "./Counter";
 import { VictoryPoint } from "./VictoryPointsItem";
@@ -20,7 +20,7 @@ export type EditionConfig = {
   image: ImageSource | ImageSource[];
   values: number[];
   maxValues: number[];
-  onChangeValues: ((players: Game["players"], value: number) => void)[];
+  onChangeValues: ((player: Game["players"][number], value: number) => Game["players"][number])[];
   inputBackgroundColors?: (Attributes | "yellow" | undefined)[];
   icons?: React.ReactNode[];
   children?: React.ReactNode;
@@ -31,18 +31,21 @@ type Props = {
   onEditPressed: (props: EditionConfig) => void;
 };
 
-export function CurrencyElement({ player, onEditPressed }: Props) {
-  const setPlayers = useSetAtom(playersAtom);
-
+export function CurrencyElement({ player: currentPlayer, onEditPressed }: Props) {
   const elements = [
-    { image: require("@/images/silver.png"), title: "Silver", value: player.silver, key: "silver" },
-    { image: require("@/images/provision.png"), title: "Provisions", value: player.provisions, key: "provisions" },
+    { image: require("@/images/silver.png"), title: "Silver", value: currentPlayer.silver, key: "silver" },
+    {
+      image: require("@/images/provision.png"),
+      title: "Provisions",
+      value: currentPlayer.provisions,
+      key: "provisions",
+    },
   ];
 
   return (
     <DoubleElement
-      values={[player.silver, player.provisions]}
-      victoryPoints={Math.floor((player.silver + player.provisions) / 3)}
+      values={[currentPlayer.silver, currentPlayer.provisions]}
+      victoryPoints={Math.floor((currentPlayer.silver + currentPlayer.provisions) / 3)}
       images={[elements[0].image, elements[1].image]}
       onPress={elements.map((element, i) => () => {
         onEditPressed({
@@ -51,15 +54,10 @@ export function CurrencyElement({ player, onEditPressed }: Props) {
           values: [element.value],
           maxValues: [100],
           onChangeValues: [
-            (players, value) => {
-              const playerIndex = players.findIndex((p) => p.id === player.id);
-              const updatedPlayers = [...players];
-              updatedPlayers[playerIndex] = {
-                ...players[playerIndex],
-                [element.key]: value,
-              };
-              setPlayers(updatedPlayers);
-            },
+            (player, value) => ({
+              ...player,
+              [element.key]: value,
+            }),
           ],
         });
       })}
@@ -67,18 +65,16 @@ export function CurrencyElement({ player, onEditPressed }: Props) {
   );
 }
 
-export function DebtElement({ player, onEditPressed }: Props) {
-  const setPlayers = useSetAtom(playersAtom);
-
+export function DebtElement({ player: currentPlayer, onEditPressed }: Props) {
   const elements = [
-    { image: require("@/images/debt.png"), title: "Debt", value: player.pendingDebts, key: "pendingDebts" },
-    { image: require("@/images/debt_paid.png"), title: "Paid Debts", value: player.paidDebts, key: "paidDebts" },
+    { image: require("@/images/debt.png"), title: "Debt", value: currentPlayer.pendingDebts, key: "pendingDebts" },
+    { image: require("@/images/debt_paid.png"), title: "Paid Debts", value: currentPlayer.paidDebts, key: "paidDebts" },
   ];
 
   return (
     <DoubleElement
-      values={[player.pendingDebts, player.paidDebts]}
-      victoryPoints={-3 * player.pendingDebts + player.paidDebts}
+      values={[currentPlayer.pendingDebts, currentPlayer.paidDebts]}
+      victoryPoints={-3 * currentPlayer.pendingDebts + currentPlayer.paidDebts}
       images={[elements[0].image, elements[1].image]}
       onPress={elements.map((element, i) => () => {
         onEditPressed({
@@ -87,15 +83,10 @@ export function DebtElement({ player, onEditPressed }: Props) {
           values: [element.value],
           maxValues: [100],
           onChangeValues: [
-            (players, value) => {
-              const playerIndex = players.findIndex((p) => p.id === player.id);
-              const updatedPlayers = [...players];
-              updatedPlayers[playerIndex] = {
-                ...players[playerIndex],
-                [element.key]: value,
-              };
-              setPlayers(updatedPlayers);
-            },
+            (player, value) => ({
+              ...player,
+              [element.key]: value,
+            }),
           ],
         });
       })}
@@ -103,33 +94,26 @@ export function DebtElement({ player, onEditPressed }: Props) {
   );
 }
 
-export function DevelopElement({ player, onEditPressed }: Props) {
-  const setPlayers = useSetAtom(playersAtom);
-
+export function DevelopElement({ player: currentPlayer, onEditPressed }: Props) {
   return (
     <Element
-      value={player.actions.develop}
-      victoryPoints={getActionVictoryPoints(player, "develop")}
+      value={currentPlayer.actions.develop}
+      victoryPoints={getActionVictoryPoints(currentPlayer, "develop")}
       image={require("@/images/develop.png")}
       onPress={() => {
         onEditPressed({
           title: "Develop",
           image: require("@/images/develop.png"),
-          values: [player.actions.develop],
+          values: [currentPlayer.actions.develop],
           maxValues: [8],
           onChangeValues: [
-            (players, value) => {
-              const playerIndex = players.findIndex((p) => p.id === player.id);
-              const updatedPlayers = [...players];
-              updatedPlayers[playerIndex] = {
-                ...players[playerIndex],
-                actions: {
-                  ...player.actions,
-                  develop: value,
-                },
-              };
-              setPlayers(updatedPlayers);
-            },
+            (player, value) => ({
+              ...player,
+              actions: {
+                ...player.actions,
+                develop: value,
+              },
+            }),
           ],
         });
       }}
@@ -137,9 +121,7 @@ export function DevelopElement({ player, onEditPressed }: Props) {
   );
 }
 
-export function ResourcesMarkerElement({ player, onEditPressed }: Props) {
-  const setPlayers = useSetAtom(playersAtom);
-
+export function ResourcesMarkerElement({ player: currentPlayer, onEditPressed }: Props) {
   const attributes: Attributes[] = ["red", "black", "blue"];
 
   return (
@@ -148,21 +130,16 @@ export function ResourcesMarkerElement({ player, onEditPressed }: Props) {
         onEditPressed({
           title: "Resources Marker",
           image: require("@/images/resources-marker.png"),
-          values: attributes.map((attribute) => player.resourcesMarker[attribute]),
+          values: attributes.map((attribute) => currentPlayer.resourcesMarker[attribute]),
           maxValues: [100],
           inputBackgroundColors: attributes,
-          onChangeValues: attributes.map((attribute) => (players, value: number) => {
-            const playerIndex = players.findIndex((p) => p.id === player.id);
-            const updatedPlayers = [...players];
-            updatedPlayers[playerIndex] = {
-              ...players[playerIndex],
-              resourcesMarker: {
-                ...players[playerIndex].resourcesMarker,
-                [attribute]: value,
-              },
-            };
-            setPlayers(updatedPlayers);
-          }),
+          onChangeValues: attributes.map((attribute) => (player, value) => ({
+            ...player,
+            resourcesMarker: {
+              ...player.resourcesMarker,
+              [attribute]: value,
+            },
+          })),
         });
       }}
     >
@@ -175,9 +152,7 @@ export function ResourcesMarkerElement({ player, onEditPressed }: Props) {
   );
 }
 
-export function TownsfolkElement({ player, onEditPressed }: Props) {
-  const setPlayers = useSetAtom(playersAtom);
-
+export function TownsfolkElement({ player: currentPlayer, onEditPressed }: Props) {
   const attributes: Attributes[] = ["red", "black", "blue"];
 
   return (
@@ -186,24 +161,19 @@ export function TownsfolkElement({ player, onEditPressed }: Props) {
         onEditPressed({
           title: "Townsfolk",
           image: [require("@/images/recruit.png"), require("@/images/recruit-2.png")],
-          values: attributes.map((attribute) => player.extraAttributes.townsfolks[attribute]),
+          values: attributes.map((attribute) => currentPlayer.extraAttributes.townsfolks[attribute]),
           maxValues: [100],
           inputBackgroundColors: attributes,
-          onChangeValues: attributes.map((attribute) => (players, value: number) => {
-            const playerIndex = players.findIndex((p) => p.id === player.id);
-            const updatedPlayers = [...players];
-            updatedPlayers[playerIndex] = {
-              ...players[playerIndex],
-              extraAttributes: {
-                ...players[playerIndex].extraAttributes,
-                townsfolks: {
-                  ...players[playerIndex].extraAttributes.townsfolks,
-                  [attribute]: value,
-                },
+          onChangeValues: attributes.map((attribute) => (player, value) => ({
+            ...player,
+            extraAttributes: {
+              ...player.extraAttributes,
+              townsfolks: {
+                ...player.extraAttributes.townsfolks,
+                [attribute]: value,
               },
-            };
-            setPlayers(updatedPlayers);
-          }),
+            },
+          })),
         });
       }}
     >
@@ -221,33 +191,26 @@ export function TownsfolkElement({ player, onEditPressed }: Props) {
   );
 }
 
-export function CommissionElement({ player, onEditPressed }: Props) {
-  const setPlayers = useSetAtom(playersAtom);
-
+export function CommissionElement({ player: currentPlayer, onEditPressed }: Props) {
   return (
     <Element
-      value={player.actions.commission}
-      victoryPoints={getActionVictoryPoints(player, "commission")}
+      value={currentPlayer.actions.commission}
+      victoryPoints={getActionVictoryPoints(currentPlayer, "commission")}
       image={ActionIcons["commission"]}
       onPress={() => {
         onEditPressed({
           title: "Commission",
           image: ActionIcons["commission"],
-          values: [player.actions.commission],
+          values: [currentPlayer.actions.commission],
           maxValues: [7],
           onChangeValues: [
-            (players, value) => {
-              const playerIndex = players.findIndex((p) => p.id === player.id);
-              const updatedPlayers = [...players];
-              updatedPlayers[playerIndex] = {
-                ...players[playerIndex],
-                actions: {
-                  ...players[playerIndex].actions,
-                  commission: value,
-                },
-              };
-              setPlayers(updatedPlayers);
-            },
+            (player, value) => ({
+              ...player,
+              actions: {
+                ...player.actions,
+                commission: value,
+              },
+            }),
           ],
         });
       }}
@@ -255,12 +218,10 @@ export function CommissionElement({ player, onEditPressed }: Props) {
   );
 }
 
-export function FortifyElement({ player, onEditPressed }: Props) {
-  const setPlayers = useSetAtom(playersAtom);
-
+export function FortifyElement({ player: currentPlayer, onEditPressed }: Props) {
   const items = [
     {
-      value: player.actions.fortify,
+      value: currentPlayer.actions.fortify,
       maxValue: 7,
       getUpdatedPlayer: (player: Game["players"][number], value: number) => ({
         ...player,
@@ -271,7 +232,7 @@ export function FortifyElement({ player, onEditPressed }: Props) {
       }),
     },
     {
-      value: player.extraAttributes.fortify.red,
+      value: currentPlayer.extraAttributes.fortify.red,
       maxValue: 100,
       icon: (
         <View className="flex-row">
@@ -294,7 +255,7 @@ export function FortifyElement({ player, onEditPressed }: Props) {
       }),
     },
     {
-      value: player.fortifyPV,
+      value: currentPlayer.fortifyPV,
       maxValue: 100,
       inputBackgroundColor: "yellow" as "yellow",
       getUpdatedPlayer: (player: Game["players"][number], value: number) => ({
@@ -306,8 +267,8 @@ export function FortifyElement({ player, onEditPressed }: Props) {
 
   return (
     <Element
-      value={player.actions.fortify}
-      victoryPoints={getActionVictoryPoints(player, "fortify") + player.fortifyPV}
+      value={currentPlayer.actions.fortify}
+      victoryPoints={getActionVictoryPoints(currentPlayer, "fortify") + currentPlayer.fortifyPV}
       image={ActionIcons["fortify"]}
       onPress={() => {
         onEditPressed({
@@ -316,12 +277,7 @@ export function FortifyElement({ player, onEditPressed }: Props) {
           values: items.map((item) => item.value),
           maxValues: items.map((item) => item.maxValue),
           inputBackgroundColors: items.map((item) => item.inputBackgroundColor),
-          onChangeValues: items.map((item) => (players, value) => {
-            const playerIndex = players.findIndex((p) => p.id === player.id);
-            const updatedPlayers = [...players];
-            updatedPlayers[playerIndex] = item.getUpdatedPlayer(players[playerIndex], value);
-            setPlayers(updatedPlayers);
-          }),
+          onChangeValues: items.map((item) => (player, value) => item.getUpdatedPlayer(player, value)),
           icons: items.map((item) => item.icon),
         });
       }}
@@ -329,33 +285,26 @@ export function FortifyElement({ player, onEditPressed }: Props) {
   );
 }
 
-export function GarrisonElement({ player, onEditPressed }: Props) {
-  const setPlayers = useSetAtom(playersAtom);
-
+export function GarrisonElement({ player: currentPlayer, onEditPressed }: Props) {
   return (
     <Element
-      value={player.actions.garrison}
-      victoryPoints={getActionVictoryPoints(player, "garrison")}
+      value={currentPlayer.actions.garrison}
+      victoryPoints={getActionVictoryPoints(currentPlayer, "garrison")}
       image={ActionIcons["garrison"]}
       onPress={() => {
         onEditPressed({
           title: "Garrison",
           image: ActionIcons["garrison"],
-          values: [player.actions.garrison],
+          values: [currentPlayer.actions.garrison],
           maxValues: [7],
           onChangeValues: [
-            (players, value) => {
-              const playerIndex = players.findIndex((p) => p.id === player.id);
-              const updatedPlayers = [...players];
-              updatedPlayers[playerIndex] = {
-                ...players[playerIndex],
-                actions: {
-                  ...players[playerIndex].actions,
-                  garrison: value,
-                },
-              };
-              setPlayers(updatedPlayers);
-            },
+            (player, value) => ({
+              ...player,
+              actions: {
+                ...player.actions,
+                garrison: value,
+              },
+            }),
           ],
         });
       }}
@@ -363,12 +312,10 @@ export function GarrisonElement({ player, onEditPressed }: Props) {
   );
 }
 
-export function AbsolveElement({ player, onEditPressed }: Props) {
-  const setPlayers = useSetAtom(playersAtom);
-
+export function AbsolveElement({ player: currentPlayer, onEditPressed }: Props) {
   const items = [
     {
-      value: player.actions.absolve,
+      value: currentPlayer.actions.absolve,
       maxValue: 7,
       getUpdatedPlayer: (player: Game["players"][number], value: number) => ({
         ...player,
@@ -379,7 +326,7 @@ export function AbsolveElement({ player, onEditPressed }: Props) {
       }),
     },
     {
-      value: player.extraAttributes.absolve.black,
+      value: currentPlayer.extraAttributes.absolve.black,
       maxValue: 1,
       inputBackgroundColor: "black" as Attributes,
       getUpdatedPlayer: (player: Game["players"][number], value: number) => ({
@@ -396,8 +343,8 @@ export function AbsolveElement({ player, onEditPressed }: Props) {
 
   return (
     <Element
-      value={player.actions.absolve}
-      victoryPoints={getActionVictoryPoints(player, "absolve")}
+      value={currentPlayer.actions.absolve}
+      victoryPoints={getActionVictoryPoints(currentPlayer, "absolve")}
       image={ActionIcons["absolve"]}
       onPress={() => {
         onEditPressed({
@@ -406,24 +353,17 @@ export function AbsolveElement({ player, onEditPressed }: Props) {
           values: items.map((item) => item.value),
           maxValues: items.map((item) => item.maxValue),
           inputBackgroundColors: items.map((item) => item.inputBackgroundColor),
-          onChangeValues: items.map((item) => (players, value) => {
-            const playerIndex = players.findIndex((p) => p.id === player.id);
-            const updatedPlayers = [...players];
-            updatedPlayers[playerIndex] = item.getUpdatedPlayer(players[playerIndex], value);
-            setPlayers(updatedPlayers);
-          }),
+          onChangeValues: items.map((item) => (player, value) => item.getUpdatedPlayer(player, value)),
         });
       }}
     />
   );
 }
 
-export function AttackElement({ player, onEditPressed }: Props) {
-  const setPlayers = useSetAtom(playersAtom);
-
+export function AttackElement({ player: currentPlayer, onEditPressed }: Props) {
   const items = [
     {
-      value: player.actions.attack,
+      value: currentPlayer.actions.attack,
       maxValue: 100,
       getUpdatedPlayer: (player: Game["players"][number], value: number) => ({
         ...player,
@@ -434,7 +374,7 @@ export function AttackElement({ player, onEditPressed }: Props) {
       }),
     },
     {
-      value: player.extraAttributes.outsiders.blue,
+      value: currentPlayer.extraAttributes.outsiders.blue,
       maxValue: 100,
       icon: (
         <View className="flex-row">
@@ -461,7 +401,7 @@ export function AttackElement({ player, onEditPressed }: Props) {
 
   return (
     <Element
-      value={player.actions.attack}
+      value={currentPlayer.actions.attack}
       victoryPoints={undefined}
       image={ActionIcons["attack"]}
       onPress={() => {
@@ -470,12 +410,7 @@ export function AttackElement({ player, onEditPressed }: Props) {
           image: ActionIcons["attack"],
           values: items.map((item) => item.value),
           maxValues: items.map((item) => item.maxValue),
-          onChangeValues: items.map((item) => (players, value) => {
-            const playerIndex = players.findIndex((p) => p.id === player.id);
-            const updatedPlayers = [...players];
-            updatedPlayers[playerIndex] = item.getUpdatedPlayer(players[playerIndex], value);
-            setPlayers(updatedPlayers);
-          }),
+          onChangeValues: items.map((item) => (player, value) => item.getUpdatedPlayer(player, value)),
           icons: items.map((item) => item.icon),
         });
       }}
@@ -483,12 +418,10 @@ export function AttackElement({ player, onEditPressed }: Props) {
   );
 }
 
-export function ConvertElement({ player, onEditPressed }: Props) {
-  const setPlayers = useSetAtom(playersAtom);
-
+export function ConvertElement({ player: currentPlayer, onEditPressed }: Props) {
   const items = [
     {
-      value: player.extraAttributes.outsiders.red,
+      value: currentPlayer.extraAttributes.outsiders.red,
       maxValue: 100,
       icon: (
         <View className="flex-row">
@@ -514,56 +447,47 @@ export function ConvertElement({ player, onEditPressed }: Props) {
   ];
 
   return (
-    <>
-      <Element
-        value={player.actions.convert.filter((v) => v != null).length}
-        victoryPoints={getActionVictoryPoints(player, "convert")}
-        image={ActionIcons["convert"]}
-        onPress={() => {
-          onEditPressed({
-            title: "Convert",
-            image: ActionIcons["convert"],
-            values: items.map((item) => item.value),
-            maxValues: items.map((item) => item.maxValue),
-            onChangeValues: items.map((item) => (players, value) => {
-              const playerIndex = players.findIndex((p) => p.id === player.id);
-              const updatedPlayers = [...players];
-              updatedPlayers[playerIndex] = item.getUpdatedPlayer(players[playerIndex], value);
-              setPlayers(updatedPlayers);
-            }),
-            icons: items.map((item) => item.icon),
-            children: (
-              <View className="flex-row gap-2 mt-6">
-                {player.actions.convert.map((v, i) => (
-                  <Counter
-                    key={i}
-                    orientation="vertical"
-                    value={v}
-                    minValue={-1}
-                    maxValue={100}
-                    inputBackgroundColor="yellow"
-                    onChangeValue={(players, value) => {
-                      const playerIndex = players.findIndex((p) => p.id === player.id);
-                      const updatedPlayers = [...players];
-                      const convert = [...players[playerIndex].actions.convert];
-                      convert[i] = value === -1 ? undefined : value;
-                      updatedPlayers[playerIndex] = {
-                        ...players[playerIndex],
-                        actions: {
-                          ...players[playerIndex].actions,
-                          convert,
-                        },
-                      };
-                      setPlayers(updatedPlayers);
-                    }}
-                  />
-                ))}
-              </View>
-            ),
-          });
-        }}
-      />
-    </>
+    <Element
+      value={currentPlayer.actions.convert.filter((v) => v != null).length}
+      victoryPoints={getActionVictoryPoints(currentPlayer, "convert")}
+      image={ActionIcons["convert"]}
+      onPress={() => {
+        onEditPressed({
+          title: "Convert",
+          image: ActionIcons["convert"],
+          values: items.map((item) => item.value),
+          maxValues: items.map((item) => item.maxValue),
+          onChangeValues: items.map((item) => (player, value) => item.getUpdatedPlayer(player, value)),
+          icons: items.map((item) => item.icon),
+          children: (
+            <View className="flex-row gap-2 mt-6">
+              {currentPlayer.actions.convert.map((v, i) => (
+                <Counter
+                  key={i}
+                  playerId={currentPlayer.id}
+                  orientation="vertical"
+                  value={v}
+                  minValue={-1}
+                  maxValue={100}
+                  inputBackgroundColor="yellow"
+                  onChangeValue={(player, value) => {
+                    const convert = [...player.actions.convert];
+                    convert[i] = value === -1 ? undefined : value;
+                    return {
+                      ...player,
+                      actions: {
+                        ...player.actions,
+                        convert,
+                      },
+                    };
+                  }}
+                />
+              ))}
+            </View>
+          ),
+        });
+      }}
+    />
   );
 }
 
@@ -669,8 +593,6 @@ export const ActionIcons: Record<KingsOrderActions, ImageSource> = {
 
 export function AttributesTrackerElement({ player }: GenericProps) {
   const attributes = getAttributesTotals(player);
-
-  console.debug(attributes);
 
   return (
     <View className="bg-black rounded-md p-2">

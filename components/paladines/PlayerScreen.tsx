@@ -74,6 +74,7 @@ export default function PlayerScreen({ playerIndex }: Props) {
       {modalProps != null && (
         <ModalContainer
           {...modalProps}
+          playerId={player.id}
           onDone={() => {
             setModalProps(undefined);
           }}
@@ -85,6 +86,7 @@ export default function PlayerScreen({ playerIndex }: Props) {
 }
 
 type ModalProps = {
+  playerId: number;
   onDone: () => void;
 } & EditionConfig;
 
@@ -94,6 +96,7 @@ function ModalContainer({
   values,
   maxValues,
   onChangeValues,
+  playerId,
   onDone,
   children,
   inputBackgroundColors,
@@ -123,6 +126,7 @@ function ModalContainer({
         {onChangeValues.map((onChangeValue, index) => (
           <Counter
             key={index}
+            playerId={playerId}
             value={values[index]}
             maxValue={maxValues[index]}
             onChangeValue={onChangeValue}

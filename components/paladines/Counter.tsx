@@ -1,5 +1,5 @@
 import { Image } from "expo-image";
-import { useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
@@ -11,16 +11,18 @@ import { playersAtom } from "@/state/atoms/game";
 import { VictoryPoint } from "./VictoryPointsItem";
 
 type Props = {
+  playerId: number;
   value: number | undefined;
   minValue?: number;
   maxValue: number;
   icon?: React.ReactNode;
-  onChangeValue: (players: Game["players"], value: number) => void;
+  onChangeValue: (player: Game["players"][number], value: number) => Game["players"][number];
   inputBackgroundColor?: "red" | "blue" | "black" | "yellow";
   orientation?: "horizontal" | "vertical";
 };
 
 export default function Counter({
+  playerId,
   value: initialValue,
   onChangeValue,
   minValue = 0,
@@ -29,7 +31,7 @@ export default function Counter({
   inputBackgroundColor,
   orientation = "horizontal",
 }: Props) {
-  const players = useAtomValue(playersAtom);
+  const [players, setPlayers] = useAtom(playersAtom);
   const [value, setValue] = useState(initialValue);
 
   const colorScheme = useColorScheme();
@@ -68,7 +70,12 @@ export default function Counter({
           onPress={() => {
             if (value == null || value === minValue) return;
             setValue(value - 1);
-            onChangeValue(players, value - 1);
+
+            const updatedPlayers = [...players];
+            const playerIndex = updatedPlayers.findIndex((p) => p.id === playerId);
+            const updatedPlayer = onChangeValue(updatedPlayers[playerIndex], value - 1);
+            updatedPlayers[playerIndex] = updatedPlayer;
+            setPlayers(updatedPlayers);
           }}
         >
           <Image
@@ -84,7 +91,12 @@ export default function Counter({
           onPress={() => {
             if (value === maxValue) return;
             setValue((value ?? -1) + 1);
-            onChangeValue(players, (value ?? -1) + 1);
+
+            const updatedPlayers = [...players];
+            const playerIndex = updatedPlayers.findIndex((p) => p.id === playerId);
+            const updatedPlayer = onChangeValue(updatedPlayers[playerIndex], (value ?? -1) + 1);
+            updatedPlayers[playerIndex] = updatedPlayer;
+            setPlayers(updatedPlayers);
           }}
         >
           <Image
