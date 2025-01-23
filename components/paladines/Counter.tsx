@@ -1,13 +1,14 @@
 import { Image } from "expo-image";
 import { useAtom } from "jotai";
 import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import type { Game } from "@/lib/type";
 import { playersAtom } from "@/state/atoms/game";
 
+import { HapticButton } from "../HapticButton";
 import { VictoryPoint } from "./VictoryPointsItem";
 
 type Props = {
@@ -66,7 +67,7 @@ export default function Counter({
       )}
       {icon}
       <View className={orientation === "vertical" ? "flex-col-reverse gap-6" : "flex-row gap-4"}>
-        <Pressable
+        <HapticButton
           onPress={() => {
             if (value == null || value === minValue) return;
             setValue(value - 1);
@@ -86,8 +87,8 @@ export default function Counter({
             className="w-11 h-11"
             source={require("@/images/icons/arrow-down-circle.svg")}
           />
-        </Pressable>
-        <Pressable
+        </HapticButton>
+        <HapticButton
           onPress={() => {
             if (value === maxValue) return;
             setValue((value ?? -1) + 1);
@@ -107,7 +108,7 @@ export default function Counter({
             className="w-11 h-11"
             source={require("@/images/icons/arrow-up-circle.svg")}
           />
-        </Pressable>
+        </HapticButton>
       </View>
     </View>
   );

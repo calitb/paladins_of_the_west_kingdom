@@ -2,6 +2,7 @@ import { Image, ImageSource } from "expo-image";
 import { Tabs } from "expo-router";
 import { useAtomValue } from "jotai";
 import React from "react";
+import { Platform } from "react-native";
 
 import { HapticTab } from "@/components/HapticTab";
 import { Colors } from "@/constants/Colors";
@@ -32,6 +33,9 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         headerShown: false,
         tabBarButton: HapticTab,
+        tabBarStyle: {
+          marginBottom: Platform.OS === "web" ? 20 : 0,
+        },
       }}
     >
       <Tabs.Screen

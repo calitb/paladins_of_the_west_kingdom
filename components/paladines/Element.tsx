@@ -1,7 +1,7 @@
 import { Image, ImageSource } from "expo-image";
 import { useAtomValue } from "jotai";
 import React from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 import type { Attributes, Game, KingsOrderActions } from "@/lib/type";
 import {
@@ -12,6 +12,7 @@ import {
 } from "@/lib/utils";
 import { kingsOrdersAtom } from "@/state/atoms/game";
 
+import { HapticButton } from "../HapticButton";
 import Counter from "./Counter";
 import { VictoryPoint } from "./VictoryPointsItem";
 
@@ -125,7 +126,7 @@ export function ResourcesMarkerElement({ player: currentPlayer, onEditPressed }:
   const attributes: Attributes[] = ["red", "black", "blue"];
 
   return (
-    <Pressable
+    <HapticButton
       onPress={() => {
         onEditPressed({
           title: "Resources Marker",
@@ -148,7 +149,7 @@ export function ResourcesMarkerElement({ player: currentPlayer, onEditPressed }:
           <Image source={require("@/images/resources-marker.png")} style={{ width: 35, height: 40 }} />
         </View>
       </View>
-    </Pressable>
+    </HapticButton>
   );
 }
 
@@ -156,7 +157,7 @@ export function TownsfolkElement({ player: currentPlayer, onEditPressed }: Props
   const attributes: Attributes[] = ["red", "black", "blue"];
 
   return (
-    <Pressable
+    <HapticButton
       onPress={() => {
         onEditPressed({
           title: "Townsfolk",
@@ -187,7 +188,7 @@ export function TownsfolkElement({ player: currentPlayer, onEditPressed }: Props
           </View>
         </View>
       </View>
-    </Pressable>
+    </HapticButton>
   );
 }
 
@@ -500,7 +501,7 @@ type ElementProps = {
 
 function Element({ value, victoryPoints, image, onPress }: ElementProps) {
   return (
-    <Pressable onPress={onPress}>
+    <HapticButton onPress={onPress}>
       <View className="bg-black p-2 rounded-md">
         <View className="flex-row">
           <View
@@ -516,7 +517,7 @@ function Element({ value, victoryPoints, image, onPress }: ElementProps) {
         </View>
         <View className="items-center">{victoryPoints != null && <VictoryPoint value={victoryPoints} />}</View>
       </View>
-    </Pressable>
+    </HapticButton>
   );
 }
 

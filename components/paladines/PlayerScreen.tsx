@@ -1,10 +1,11 @@
 import { Image } from "expo-image";
 import { useAtomValue } from "jotai";
 import { useState } from "react";
-import { Button, SafeAreaView, ScrollView, Text, View } from "react-native";
+import { SafeAreaView, ScrollView, Text, View } from "react-native";
 
 import { getVictoryPoints } from "@/lib/utils";
 import { kingsOrdersAtom, playersAtom } from "@/state/atoms/game";
+import { HapticButton } from "../HapticButton";
 import Counter from "./Counter";
 import {
   AbsolveElement,
@@ -69,7 +70,7 @@ export default function PlayerScreen({ playerIndex }: Props) {
         </View>
       </ScrollView>
       <View>
-        <VictoryPointsItem title="Victory Points" vp={[getVictoryPoints(player, kingsOrders)]} />
+        <VictoryPointsItem value={getVictoryPoints(player, kingsOrders)} />
       </View>
       {modalProps != null && (
         <ModalContainer
@@ -135,7 +136,12 @@ function ModalContainer({
           />
         ))}
         {children}
-        <Button color="white" title="Done" onPress={onDone} />
+
+        <HapticButton onPress={onDone}>
+          <View className="justify-center items-center">
+            <Text className="text-white text-2xl">Done</Text>
+          </View>
+        </HapticButton>
       </View>
     </View>
   );

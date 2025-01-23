@@ -1,66 +1,36 @@
 import { Image } from "expo-image";
 import React from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { twMerge } from "tailwind-merge";
 
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
-import Item from "./Item";
-import { ValueBox } from "./MedidorDeAtributo";
-
 type Props = {
-  title: string;
-  values?: number[];
-  vp?: number[];
-  vpDetails?: (number | undefined)[];
-  onPressValue?: (index: number) => void;
-  onPressVPDetails?: (index: number) => void;
+  value: number;
 };
 
-export default function VictoryPointsItem({ title, values, vp, vpDetails, onPressValue, onPressVPDetails }: Props) {
+export default function VictoryPointsItem({ value }: Props) {
   const colorScheme = useColorScheme();
 
   return (
-    <Item>
-      <View className={"flex-row items-center gap-2"}>
-        {values != null && (
-          <View className="flex-row gap-2">
-            {values.map((value, index) => (
-              <Pressable key={index} onPress={() => onPressValue?.(index)}>
-                <ValueBox value={value} color="gray" onPressValue={undefined} />
-              </Pressable>
-            ))}
-          </View>
-        )}
-        <View className={(vpDetails?.length ?? 0) > 2 ? "justify-center" : "flex-row items-center gap-2"}>
-          <Text
-            className="text-xl"
-            style={{
-              color: Colors[colorScheme ?? "light"].text,
-            }}
-          >
-            {title}
-          </Text>
-          {vpDetails != null && (
-            <View className="flex-row gap-4">
-              {vpDetails.map((value, index) => (
-                <Pressable key={index} onPress={() => onPressVPDetails?.(index)}>
-                  <VictoryPoint key={index} value={value} size="small" />
-                </Pressable>
-              ))}
-            </View>
-          )}
-        </View>
-      </View>
-      {vp != null && (
-        <View className="flex-row">
-          {vp.map((value, index) => (
-            <VictoryPoint key={index} value={value} />
-          ))}
-        </View>
-      )}
-    </Item>
+    <View
+      className="flex-row justify-between items-center py-1 px-2 border"
+      style={{
+        backgroundColor: Colors[colorScheme ?? "light"].background,
+        borderColor: Colors[colorScheme ?? "light"].text,
+      }}
+    >
+      <Text
+        className="text-xl"
+        style={{
+          color: Colors[colorScheme ?? "light"].text,
+        }}
+      >
+        Victory Points
+      </Text>
+      <VictoryPoint value={value} />
+    </View>
   );
 }
 
