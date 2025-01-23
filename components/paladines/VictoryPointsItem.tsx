@@ -66,22 +66,30 @@ export default function VictoryPointsItem({ title, values, vp, vpDetails, onPres
 
 type VictoryPointProps = {
   value: number | undefined;
-  size?: "small" | "normal";
+  size?: "small" | "normal" | "large";
+  color?: "yellow" | "red" | "blue" | "black";
 };
 
-export function VictoryPoint({ value, size = "normal" }: VictoryPointProps) {
+export function VictoryPoint({ value, size = "normal", color = "yellow" }: VictoryPointProps) {
   return (
-    <View className={twMerge("relative", size === "small" ? "w-8 h-8" : "w-11 h-11")}>
+    <View className={twMerge("relative", size === "small" ? "w-8 h-8" : size === "normal" ? "w-11 h-11" : "w-14 h-14")}>
       <Image
         className="absolute inset-0"
         style={{
-          tintColor: "yellow",
+          tintColor: color,
         }}
-        tintColor="yellow"
+        tintColor={color}
         source={require("@/images/icons/bookmark.svg")}
       />
       <View className="absolute inset-0 items-center justify-center">
-        <Text className={twMerge("font-bold", size === "small" ? "text-xs" : "text-base")}>{value}</Text>
+        <Text
+          style={{
+            color: color === "yellow" ? "black" : "white",
+          }}
+          className={twMerge("font-bold", size === "small" ? "text-xs" : size === "normal" ? "text-base" : "text-lg")}
+        >
+          {value}
+        </Text>
       </View>
     </View>
   );

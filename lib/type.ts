@@ -1,40 +1,43 @@
-export type Actions = "convertir" | "fortificar" | "guarnecer" | "absolver" | "atacar" | "comisionar" | "desarrollar";
+export type KingsOrderActions = "convert" | "fortify" | "garrison" | "absolve" | "attack" | "commission";
+export type Actions = KingsOrderActions | "develop";
 
 type KingsOrders = {
-  lower: Actions | undefined;
-  medium: Actions | undefined;
-  upper: Actions | undefined;
+  lower: KingsOrderActions | undefined;
+  medium: KingsOrderActions | undefined;
+  upper: KingsOrderActions | undefined;
 };
 
-export type MedidorAtributos = {
+export type Attributes = "red" | "blue" | "black";
+export type AttributeTracks = {
   red: number;
   blue: number;
   black: number;
 };
 
 type Player = {
+  id: number;
   isHuman: boolean;
   name: string | undefined;
-  marcadorDeRecursos: MedidorAtributos;
-  plata: number;
-  provisiones: number;
-  deudasPagadas: number;
-  deudasPendientes: number;
-  acciones: {
-    desarrollar: number;
-    comisionar: number;
-    absolver: number;
-    fortificar: number;
-    atacar: number;
-    guarnecer: number;
-    convertir: (number | undefined)[];
+  resourcesMarker: AttributeTracks;
+  silver: number;
+  provisions: number;
+  paidDebts: number;
+  pendingDebts: number;
+  actions: {
+    develop: number;
+    commission: number;
+    absolve: number;
+    fortify: number;
+    attack: number;
+    garrison: number;
+    convert: (number | undefined)[];
   };
-  fortificarPV: number;
-  atributosExtras: {
-    aldeanos: MedidorAtributos;
-    forasteros: Omit<MedidorAtributos, "black">;
-    fortificaciones: Omit<MedidorAtributos, "blue" | "black">;
-    absolver: Omit<MedidorAtributos, "red" | "blue">;
+  fortifyPV: number;
+  extraAttributes: {
+    townsfolks: AttributeTracks;
+    outsiders: Omit<AttributeTracks, "black">;
+    fortify: Omit<AttributeTracks, "blue" | "black">;
+    absolve: Omit<AttributeTracks, "red" | "blue">;
   };
 };
 

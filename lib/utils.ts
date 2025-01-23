@@ -1,40 +1,44 @@
-import type { Actions, Game } from "./type";
+import type { Actions, Game, KingsOrderActions } from "./type";
 
 export function getNumberOfConversions(player: Game["players"][number]) {
-  return player.acciones.convertir.reduce((acc: number, item) => (item == null ? acc : acc + 1), 0);
+  return player.actions.convert.reduce((acc: number, item) => (item == null ? acc : acc + 1), 0);
 }
 
 export function getAttributesTotals(player: Game["players"][number]) {
   return {
     red:
-      player.acciones.fortificar +
+      player.actions.fortify +
       getNumberOfConversions(player) +
-      player.atributosExtras.aldeanos.red +
-      player.atributosExtras.forasteros.red +
-      player.atributosExtras.fortificaciones.red +
-      player.marcadorDeRecursos.red,
+      player.extraAttributes.townsfolks.red +
+      player.extraAttributes.outsiders.red +
+      player.extraAttributes.fortify.red +
+      player.resourcesMarker.red,
     blue:
-      player.acciones.comisionar +
-      player.acciones.atacar +
-      player.atributosExtras.aldeanos.blue +
-      player.atributosExtras.forasteros.blue +
-      player.marcadorDeRecursos.blue,
+      player.actions.commission +
+      player.actions.attack +
+      player.extraAttributes.townsfolks.blue +
+      player.extraAttributes.outsiders.blue +
+      player.resourcesMarker.blue,
     black:
-      player.acciones.absolver +
-      player.acciones.guarnecer +
-      player.atributosExtras.aldeanos.black +
-      player.atributosExtras.absolver.black +
-      player.marcadorDeRecursos.black,
+      player.actions.absolve +
+      player.actions.garrison +
+      player.extraAttributes.townsfolks.black +
+      player.extraAttributes.absolve.black +
+      player.resourcesMarker.black,
   };
 }
 
-export function getKingsOrderVictoryPoints(player: Game["players"][number], orden: Actions | undefined, pv: number) {
-  return (orden === "convertir" && getNumberOfConversions(player) >= 5) ||
-    (orden === "fortificar" && player.acciones.fortificar >= 5) ||
-    (orden === "guarnecer" && player.acciones.guarnecer >= 5) ||
-    (orden === "absolver" && player.acciones.absolver >= 5) ||
-    (orden === "atacar" && player.acciones.atacar >= 5) ||
-    (orden === "comisionar" && player.acciones.comisionar >= 5)
+export function getKingsOrderVictoryPoints(
+  player: Game["players"][number],
+  orden: KingsOrderActions | undefined,
+  pv: number,
+) {
+  return (orden === "convert" && getNumberOfConversions(player) >= 5) ||
+    (orden === "fortify" && player.actions.fortify >= 5) ||
+    (orden === "garrison" && player.actions.garrison >= 5) ||
+    (orden === "absolve" && player.actions.absolve >= 5) ||
+    (orden === "attack" && player.actions.attack >= 5) ||
+    (orden === "commission" && player.actions.commission >= 5)
     ? pv
     : 0;
 }
@@ -60,48 +64,30 @@ export function getAttributeVictoryPoints(value: number) {
 }
 
 export function getActionVictoryPoints(player: Game["players"][number], action: Actions) {
-  if (action === "comisionar") {
-    return player.acciones.comisionar === 5
+  if (action === "commission") {
+    return player.actions.commission === 5
       ? 2
-      : player.acciones.comisionar === 6
+      : player.actions.commission === 6
         ? 5
-        : player.acciones.comisionar === 7
+        : player.actions.commission === 7
           ? 9
           : 0;
-  } else if (action === "guarnecer") {
-    return player.acciones.guarnecer === 5
+  } else if (action === "garrison") {
+    return player.actions.garrison === 5
       ? 2
-      : player.acciones.guarnecer === 6
+      : player.actions.garrison === 6
         ? 5
-        : player.acciones.guarnecer === 7
+        : player.actions.garrison === 7
           ? 9
           : 0;
-  } else if (action === "absolver") {
-    return player.acciones.absolver === 5
-      ? 1
-      : player.acciones.absolver === 6
-        ? 3
-        : player.acciones.absolver === 7
-          ? 6
-          : 0;
-  } else if (action === "fortificar") {
-    return player.acciones.fortificar === 5
-      ? 1
-      : player.acciones.fortificar === 6
-        ? 3
-        : player.acciones.fortificar === 7
-          ? 6
-          : 0;
-  } else if (action === "desarrollar") {
-    return player.acciones.desarrollar === 6
-      ? 1
-      : player.acciones.desarrollar === 7
-        ? 3
-        : player.acciones.desarrollar === 8
-          ? 6
-          : 0;
-  } else if (action === "convertir") {
-    return player.acciones.convertir.reduce((acc: number, item) => acc + (item ?? 0), 0);
+  } else if (action === "absolve") {
+    return player.actions.absolve === 5 ? 1 : player.actions.absolve === 6 ? 3 : player.actions.absolve === 7 ? 6 : 0;
+  } else if (action === "fortify") {
+    return player.actions.fortify === 5 ? 1 : player.actions.fortify === 6 ? 3 : player.actions.fortify === 7 ? 6 : 0;
+  } else if (action === "develop") {
+    return player.actions.develop === 6 ? 1 : player.actions.develop === 7 ? 3 : player.actions.develop === 8 ? 6 : 0;
+  } else if (action === "convert") {
+    return player.actions.convert.reduce((acc: number, item) => acc + (item ?? 0), 0);
   }
 
   return 0;
@@ -113,20 +99,20 @@ export function getVictoryPoints(player: Game["players"][number], ordenes: Game[
     getKingsOrderVictoryPoints(player, ordenes.medium, 6) +
     getKingsOrderVictoryPoints(player, ordenes.upper, 8);
 
-  const deudas = player.deudasPagadas - player.deudasPendientes * 3;
-  const plataProvisiones = Math.floor((player.plata + player.provisiones) / 3);
+  const deudas = player.paidDebts - player.pendingDebts * 3;
+  const plataProvisiones = Math.floor((player.silver + player.provisions) / 3);
 
   const attributes = getAttributesTotals(player);
   const red = getAttributeVictoryPoints(attributes.red);
   const blue = getAttributeVictoryPoints(attributes.blue);
   const black = getAttributeVictoryPoints(attributes.black);
 
-  const comisionar = getActionVictoryPoints(player, "comisionar");
-  const guarnecer = getActionVictoryPoints(player, "guarnecer");
-  const absolver = getActionVictoryPoints(player, "absolver");
-  const fortificar = getActionVictoryPoints(player, "fortificar");
-  const desarrollar = getActionVictoryPoints(player, "desarrollar");
-  const convertir = getActionVictoryPoints(player, "convertir");
+  const commission = getActionVictoryPoints(player, "commission");
+  const garrison = getActionVictoryPoints(player, "garrison");
+  const absolve = getActionVictoryPoints(player, "absolve");
+  const fortify = getActionVictoryPoints(player, "fortify");
+  const develop = getActionVictoryPoints(player, "develop");
+  const convert = getActionVictoryPoints(player, "convert");
 
   return (
     red +
@@ -134,97 +120,99 @@ export function getVictoryPoints(player: Game["players"][number], ordenes: Game[
     black +
     kingsOrders +
     deudas +
-    comisionar +
-    absolver +
-    fortificar +
-    player.fortificarPV +
-    guarnecer +
-    convertir +
-    desarrollar +
+    commission +
+    absolve +
+    fortify +
+    player.fortifyPV +
+    garrison +
+    convert +
+    develop +
     plataProvisiones
   );
 }
 
-export function createPlayer(): Game["players"][number] {
+export function createPlayer(id: number): Game["players"][number] {
   return {
+    id,
     isHuman: true,
     name: undefined,
-    marcadorDeRecursos: {
+    resourcesMarker: {
       red: 0,
       blue: 0,
       black: 0,
     },
-    plata: 3,
-    provisiones: 1,
-    deudasPagadas: 0,
-    deudasPendientes: 0,
-    acciones: {
-      desarrollar: 0,
-      comisionar: 0,
-      absolver: 0,
-      fortificar: 0,
-      atacar: 0,
-      guarnecer: 0,
-      convertir: [undefined, undefined, undefined, undefined, undefined, undefined, undefined],
+    silver: 3,
+    provisions: 1,
+    paidDebts: 0,
+    pendingDebts: 0,
+    actions: {
+      develop: 0,
+      commission: 0,
+      absolve: 0,
+      fortify: 0,
+      attack: 0,
+      garrison: 0,
+      convert: [undefined, undefined, undefined, undefined, undefined, undefined, undefined],
     },
-    fortificarPV: 0,
-    atributosExtras: {
-      aldeanos: {
+    fortifyPV: 0,
+    extraAttributes: {
+      townsfolks: {
         red: 0,
         blue: 0,
         black: 0,
       },
-      forasteros: {
+      outsiders: {
         red: 0,
         blue: 0,
       },
-      fortificaciones: {
+      fortify: {
         red: 0,
       },
-      absolver: {
+      absolve: {
         black: 0,
       },
     },
   };
 }
 
-export function createIA(): Game["players"][number] {
+export function createIA(id: number): Game["players"][number] {
   return {
+    id,
     isHuman: false,
     name: "IA",
-    marcadorDeRecursos: {
+    resourcesMarker: {
       red: 0,
       blue: 0,
       black: 0,
     },
-    plata: 0,
-    provisiones: 0,
-    deudasPagadas: 0,
-    deudasPendientes: 0,
-    acciones: {
-      desarrollar: 0,
-      comisionar: 0,
-      absolver: 0,
-      fortificar: 0,
-      atacar: 0,
-      guarnecer: 0,
-      convertir: [undefined, undefined, undefined, undefined, undefined, undefined, undefined],
+    silver: 0,
+    provisions: 0,
+    paidDebts: 0,
+    pendingDebts: 0,
+    actions: {
+      develop: 0,
+      commission: 0,
+      absolve: 0,
+      fortify: 0,
+      attack: 0,
+      garrison: 0,
+      convert: [undefined, undefined, undefined, undefined, undefined, undefined, undefined],
     },
-    fortificarPV: 0,
-    atributosExtras: {
-      aldeanos: {
+    fortifyPV: 0,
+    extraAttributes: {
+      townsfolks: {
         red: 0,
         blue: 0,
         black: 0,
       },
-      forasteros: {
+      outsiders: {
         red: 0,
         blue: 0,
       },
-      fortificaciones: {
+      fortify: {
         red: 0,
       },
-      absolver: {
+      absolve: {
         black: 0,
       },
     },
