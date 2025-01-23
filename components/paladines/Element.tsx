@@ -12,6 +12,7 @@ import {
 } from "@/lib/utils";
 import { kingsOrdersAtom } from "@/state/atoms/game";
 
+import { twMerge } from "tailwind-merge";
 import { HapticButton } from "../HapticButton";
 import Counter from "./Counter";
 import { VictoryPoint } from "./VictoryPointsItem";
@@ -497,12 +498,13 @@ type ElementProps = {
   victoryPoints: number | undefined;
   image: ImageSource;
   onPress: () => void;
+  className?: string;
 };
 
-function Element({ value, victoryPoints, image, onPress }: ElementProps) {
+function Element({ value, victoryPoints, image, onPress, className }: ElementProps) {
   return (
     <HapticButton onPress={onPress}>
-      <View className="bg-black p-2 rounded-md">
+      <View className={twMerge("bg-black p-2 rounded-md gap-2", className)}>
         <View className="flex-row">
           <View
             className="justify-center items-center bg-white"
@@ -515,7 +517,9 @@ function Element({ value, victoryPoints, image, onPress }: ElementProps) {
           </View>
           <Image source={image} style={{ width: 35, height: 40 }} />
         </View>
-        <View className="items-center">{victoryPoints != null && <VictoryPoint value={victoryPoints} />}</View>
+        <View className="items-center justify-center">
+          {victoryPoints != null && <VictoryPoint value={victoryPoints} />}
+        </View>
       </View>
     </HapticButton>
   );
@@ -530,12 +534,26 @@ type DoubleElementProps = {
 
 function DoubleElement({ values, victoryPoints, images, onPress }: DoubleElementProps) {
   return (
-    <View className="bg-black rounded-md">
-      <View className="flex-row">
-        <Element value={values[0]} victoryPoints={undefined} image={images[0]} onPress={onPress[0]} />
-        <Element value={values[1]} victoryPoints={undefined} image={images[1]} onPress={onPress[1]} />
+    <View className="bg-black rounded-md p-2 gap-2">
+      <View className="flex-row gap-2">
+        <Element
+          className="gap-0 p-0"
+          value={values[0]}
+          victoryPoints={undefined}
+          image={images[0]}
+          onPress={onPress[0]}
+        />
+        <Element
+          className="gap-0 p-0"
+          value={values[1]}
+          victoryPoints={undefined}
+          image={images[1]}
+          onPress={onPress[1]}
+        />
       </View>
-      <View className="items-center">{victoryPoints != null && <VictoryPoint value={victoryPoints} />}</View>
+      <View className="items-center justify-center">
+        {victoryPoints != null && <VictoryPoint value={victoryPoints} />}
+      </View>
     </View>
   );
 }
@@ -554,7 +572,7 @@ export function KingsOrderElement({ player }: GenericProps) {
   ];
 
   return (
-    <View className="bg-black rounded-md p-2">
+    <View className="bg-black rounded-md p-2 gap-2">
       <View className="flex-row gap-2">
         {elements.map((element, i) => (
           <View
@@ -569,7 +587,7 @@ export function KingsOrderElement({ player }: GenericProps) {
           </View>
         ))}
       </View>
-      <View className="items-center">
+      <View className="items-center justify-center">
         {
           <VictoryPoint
             value={elements.reduce(
@@ -596,7 +614,7 @@ export function AttributesTrackerElement({ player }: GenericProps) {
   const attributes = getAttributesTotals(player);
 
   return (
-    <View className="bg-black rounded-md p-2">
+    <View className="bg-black rounded-md p-2 gap-2">
       <View className="flex-row gap-2">
         {["red", "black", "blue"].map((attribute, i) => (
           <View key={attribute} className="justify-center items-center bg-white">
@@ -604,7 +622,7 @@ export function AttributesTrackerElement({ player }: GenericProps) {
           </View>
         ))}
       </View>
-      <View className="items-center">
+      <View className="items-center justify-center">
         {
           <VictoryPoint
             value={["red", "black", "blue"].reduce(
