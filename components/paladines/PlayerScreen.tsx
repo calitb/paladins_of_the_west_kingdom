@@ -63,7 +63,7 @@ export default function PlayerScreen({ playerIndex }: Props) {
             <AttackElement player={player} onEditPressed={setModalProps} />
             <ConvertElement player={player} onEditPressed={setModalProps} />
           </View>
-          <View className="flex-row justify-between">
+          <View className="flex-row justify-center gap-8 bg-white p-5 rounded-lg">
             <AttributesTrackerElement player={player} />
             <KingsOrderElement player={player} />
           </View>
