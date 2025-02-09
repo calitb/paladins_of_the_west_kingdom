@@ -19,7 +19,7 @@ export default function SettingsScreen() {
 
   return (
     <SafeAreaView className="flex-1 gap-4">
-      <ScrollView className="flex-1 px-10 py-5">
+      <ScrollView className="flex-1 bg-gray-400 px-10 py-5 items-center">
         <View className="flex-1 gap-10">
           <View className="items-center justify-between px-5 py-2 gap-4">
             <Text className="text-xl" style={{ color: Colors[colorScheme ?? "light"].text }}>
@@ -74,7 +74,7 @@ type PlayerButtonProps = {
 
 function PlayerButton({ selected, onPress, children }: PlayerButtonProps) {
   return (
-    <View className={twMerge("p-2 rounded-md", selected ? "bg-green-700" : "bg-gray-200")}>
+    <View className={twMerge("p-2 rounded-md", selected ? "bg-green-700" : "bg-black")}>
       <HapticButton onPress={onPress}>
         <View className="bg-white py-2 px-3">
           <Text className="text-black text-xl">{children}</Text>
@@ -128,7 +128,7 @@ function KingsOrdersButton({ level, action }: KingsOrderButtonProps) {
         })
       }
     >
-      <View className={twMerge("p-2 rounded-md", kingsOrders[level] === action ? "bg-green-700" : "bg-gray-200")}>
+      <View className={twMerge("p-2 rounded-md", kingsOrders[level] === action ? "bg-green-700" : "bg-black")}>
         <Image source={ActionIcons[action]} style={{ width: (70 / 3.0) * 2, height: (80 / 3.0) * 2 }} />
       </View>
     </HapticButton>
