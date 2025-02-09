@@ -377,7 +377,7 @@ export function AttackElement({ player: currentPlayer, onEditPressed }: Props) {
     },
     {
       value: currentPlayer.extraAttributes.outsiders.blue,
-      maxValue: 100,
+      maxValue: 2,
       icon: (
         <View className="flex-row">
           <View className="justify-center items-center bg-white p-1">
@@ -424,7 +424,7 @@ export function ConvertElement({ player: currentPlayer, onEditPressed }: Props) 
   const items = [
     {
       value: currentPlayer.extraAttributes.outsiders.red,
-      maxValue: 100,
+      maxValue: 6,
       icon: (
         <View className="flex-row">
           <View className="justify-center items-center bg-white p-1">
