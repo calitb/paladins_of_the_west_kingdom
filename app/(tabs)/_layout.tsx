@@ -71,7 +71,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: "Ajustes",
+          title: "Settings",
           tabBarIcon: (color) => renderIcon(color, require("@/images/icons/cog-8-tooth.svg")),
         }}
       />
