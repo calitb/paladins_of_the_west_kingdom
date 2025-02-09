@@ -23,7 +23,7 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "start_url": "https://paladins-of-the-west-kingdom.calitb.dev/",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"
