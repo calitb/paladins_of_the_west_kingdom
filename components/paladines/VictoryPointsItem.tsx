@@ -15,7 +15,7 @@ export default function VictoryPointsItem({ value }: Props) {
 
   return (
     <View
-      className="flex-row justify-between items-center py-1 px-2 border"
+      className="flex-row items-center justify-between border px-2 py-1"
       style={{
         backgroundColor: Colors[colorScheme ?? "light"].background,
         borderColor: Colors[colorScheme ?? "light"].text,
@@ -42,7 +42,7 @@ type VictoryPointProps = {
 
 export function VictoryPoint({ value, size = "normal", color = "yellow" }: VictoryPointProps) {
   return (
-    <View className={twMerge("relative", size === "small" ? "w-8 h-8" : size === "normal" ? "w-11 h-11" : "w-14 h-14")}>
+    <View className={twMerge("relative", size === "small" ? "h-8 w-8" : size === "normal" ? "h-11 w-11" : "h-14 w-14")}>
       <Image
         className="absolute inset-0"
         style={{

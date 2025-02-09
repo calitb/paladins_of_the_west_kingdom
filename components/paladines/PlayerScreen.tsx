@@ -39,7 +39,7 @@ export default function PlayerScreen({ playerIndex }: Props) {
 
   return (
     <SafeAreaView className="flex-1">
-      <ScrollView className="flex-1 bg-gray-400 px-10 py-5 gap-10 items-center">
+      <ScrollView className="flex-1 items-center gap-10 bg-gray-400 px-10 py-5">
         <View className="gap-10">
           <View className="flex-row justify-between">
             {player.isHuman ? (
@@ -63,7 +63,7 @@ export default function PlayerScreen({ playerIndex }: Props) {
             <AttackElement player={player} onEditPressed={setModalProps} />
             <ConvertElement player={player} onEditPressed={setModalProps} />
           </View>
-          <View className="flex-row justify-center gap-8 bg-white p-5 rounded-lg">
+          <View className="flex-row justify-center gap-8 rounded-lg bg-white p-5">
             <AttributesTrackerElement player={player} />
             <KingsOrderElement player={player} />
           </View>
@@ -104,15 +104,15 @@ function ModalContainer({
   icons,
 }: ModalProps) {
   return (
-    <View className="absolute inset-0 justify-center items-center bg-black/65 z-10">
+    <View className="absolute inset-0 z-10 items-center justify-center bg-black/65">
       <View
-        className="p-5 gap-6 border"
+        className="gap-6 border p-5"
         style={{
           backgroundColor: "#005936",
           borderColor: "white",
         }}
       >
-        <View className="flex-row gap-4 items-center">
+        <View className="flex-row items-center gap-4">
           {Array.isArray(image) ? (
             <View className="flex-row gap-2">
               {image.map((img, index) => (
@@ -138,8 +138,8 @@ function ModalContainer({
         {children}
 
         <HapticButton onPress={onDone}>
-          <View className="justify-center items-center">
-            <Text className="text-white text-2xl">Done</Text>
+          <View className="items-center justify-center">
+            <Text className="text-2xl text-white">Done</Text>
           </View>
         </HapticButton>
       </View>

@@ -38,21 +38,21 @@ export default function Counter({
   const colorScheme = useColorScheme();
 
   return (
-    <View className={orientation === "vertical" ? "flex-col gap-6" : "flex-row gap-4 items-center"}>
+    <View className={orientation === "vertical" ? "flex-col gap-6" : "flex-row items-center gap-4"}>
       {inputBackgroundColor == null ? (
         <View
-          className="justify-center items-center bg-white"
+          className="items-center justify-center bg-white"
           style={{
             width: 35,
             height: 40,
             borderColor: Colors[colorScheme ?? "light"].text,
           }}
         >
-          <Text className="font-bold text-xl">{value}</Text>
+          <Text className="text-xl font-bold">{value}</Text>
         </View>
       ) : (
         <View
-          className="justify-center items-center"
+          className="items-center justify-center"
           style={{
             width: 35,
             height: 40,
@@ -84,7 +84,7 @@ export default function Counter({
               tintColor: "yellow",
             }}
             tintColor="yellow"
-            className="w-11 h-11"
+            className="h-11 w-11"
             source={require("@/images/icons/arrow-down-circle.svg")}
           />
         </HapticButton>
@@ -105,7 +105,7 @@ export default function Counter({
               tintColor: "yellow",
             }}
             tintColor="yellow"
-            className="w-11 h-11"
+            className="h-11 w-11"
             source={require("@/images/icons/arrow-up-circle.svg")}
           />
         </HapticButton>

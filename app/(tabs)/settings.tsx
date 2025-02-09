@@ -15,9 +15,9 @@ export default function SettingsScreen() {
 
   return (
     <SafeAreaView className="flex-1 gap-4">
-      <ScrollView className="flex-1 bg-gray-400 px-10 py-5 items-center">
+      <ScrollView className="flex-1 items-center bg-gray-400 px-10 py-5">
         <View className="flex-1 gap-10">
-          <View className="items-center justify-between px-5 py-2 gap-4">
+          <View className="items-center justify-between gap-4 px-5 py-2">
             <Text className="text-xl">Number of Players</Text>
             <View className="flex-row gap-7">
               <PlayerButton
@@ -46,7 +46,7 @@ export default function SettingsScreen() {
               </PlayerButton>
             </View>
           </View>
-          <View className="py-2 px-5 gap-4">
+          <View className="gap-4 px-5 py-2">
             <Text className="text-xl">King's Orders</Text>
             <KingsOrders pv={4} level="lower" />
             <KingsOrders pv={6} level="medium" />
@@ -66,10 +66,10 @@ type PlayerButtonProps = {
 
 function PlayerButton({ selected, onPress, children }: PlayerButtonProps) {
   return (
-    <View className={twMerge("p-2 rounded-md", selected ? "bg-green-700" : "bg-black")}>
+    <View className={twMerge("rounded-md p-2", selected ? "bg-green-700" : "bg-black")}>
       <HapticButton onPress={onPress}>
-        <View className="bg-white py-2 px-3">
-          <Text className="text-black text-xl">{children}</Text>
+        <View className="bg-white px-3 py-2">
+          <Text className="text-xl text-black">{children}</Text>
         </View>
       </HapticButton>
     </View>
@@ -120,7 +120,7 @@ function KingsOrdersButton({ level, action }: KingsOrderButtonProps) {
         })
       }
     >
-      <View className={twMerge("p-2 rounded-md", kingsOrders[level] === action ? "bg-green-700" : "bg-black")}>
+      <View className={twMerge("rounded-md p-2", kingsOrders[level] === action ? "bg-green-700" : "bg-black")}>
         <Image source={ActionIcons[action]} style={{ width: (70 / 3.0) * 2, height: (80 / 3.0) * 2 }} />
       </View>
     </HapticButton>

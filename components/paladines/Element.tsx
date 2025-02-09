@@ -145,8 +145,8 @@ export function ResourcesMarkerElement({ player: currentPlayer, onEditPressed }:
         });
       }}
     >
-      <View className="bg-black rounded-md p-2">
-        <View className="justify-center items-center bg-white">
+      <View className="rounded-md bg-black p-2">
+        <View className="items-center justify-center bg-white">
           <Image source={require("@/images/resources-marker.png")} style={{ width: 35, height: 40 }} />
         </View>
       </View>
@@ -179,12 +179,12 @@ export function TownsfolkElement({ player: currentPlayer, onEditPressed }: Props
         });
       }}
     >
-      <View className="bg-black rounded-md p-2">
+      <View className="rounded-md bg-black p-2">
         <View className="flex-row gap-2">
-          <View className="justify-center items-center bg-white">
+          <View className="items-center justify-center bg-white">
             <Image source={require("@/images/recruit.png")} style={{ width: 35, height: 40 }} />
           </View>
-          <View className="justify-center items-center bg-white">
+          <View className="items-center justify-center bg-white">
             <Image source={require("@/images/recruit-2.png")} style={{ width: 35, height: 40 }} />
           </View>
         </View>
@@ -238,10 +238,10 @@ export function FortifyElement({ player: currentPlayer, onEditPressed }: Props) 
       maxValue: 100,
       icon: (
         <View className="flex-row">
-          <View className="justify-center items-center bg-white p-1">
+          <View className="items-center justify-center bg-white p-1">
             <VictoryPoint size="small" color="red" value={undefined} />
           </View>
-          <View className="justify-center items-center bg-white p-1">
+          <View className="items-center justify-center bg-white p-1">
             <VictoryPoint size="small" color="red" value={undefined} />
           </View>
         </View>
@@ -380,10 +380,10 @@ export function AttackElement({ player: currentPlayer, onEditPressed }: Props) {
       maxValue: 2,
       icon: (
         <View className="flex-row">
-          <View className="justify-center items-center bg-white p-1">
+          <View className="items-center justify-center bg-white p-1">
             <VictoryPoint size="small" color="blue" value={undefined} />
           </View>
-          <View className="justify-center items-center bg-white p-1">
+          <View className="items-center justify-center bg-white p-1">
             <VictoryPoint size="small" color="blue" value={undefined} />
           </View>
         </View>
@@ -427,10 +427,10 @@ export function ConvertElement({ player: currentPlayer, onEditPressed }: Props) 
       maxValue: 6,
       icon: (
         <View className="flex-row">
-          <View className="justify-center items-center bg-white p-1">
+          <View className="items-center justify-center bg-white p-1">
             <VictoryPoint size="small" color="red" value={undefined} />
           </View>
-          <View className="justify-center items-center bg-white p-1">
+          <View className="items-center justify-center bg-white p-1">
             <VictoryPoint size="small" color="red" value={undefined} />
           </View>
         </View>
@@ -462,7 +462,7 @@ export function ConvertElement({ player: currentPlayer, onEditPressed }: Props) 
           onChangeValues: items.map((item) => (player, value) => item.getUpdatedPlayer(player, value)),
           icons: items.map((item) => item.icon),
           children: (
-            <View className="flex-row gap-2 mt-6">
+            <View className="mt-6 flex-row gap-2">
               {currentPlayer.actions.convert.map((v, i) => (
                 <Counter
                   key={i}
@@ -504,16 +504,16 @@ type ElementProps = {
 function Element({ value, victoryPoints, image, onPress, className }: ElementProps) {
   return (
     <HapticButton onPress={onPress}>
-      <View className={twMerge("bg-black p-2 rounded-md gap-2", className)}>
+      <View className={twMerge("gap-2 rounded-md bg-black p-2", className)}>
         <View className="flex-row">
           <View
-            className="justify-center items-center bg-white"
+            className="items-center justify-center bg-white"
             style={{
               width: 35,
               height: 40,
             }}
           >
-            <Text className="font-bold text-xl">{value}</Text>
+            <Text className="text-xl font-bold">{value}</Text>
           </View>
           <Image source={image} style={{ width: 35, height: 40 }} />
         </View>
@@ -534,7 +534,7 @@ type DoubleElementProps = {
 
 function DoubleElement({ values, victoryPoints, images, onPress }: DoubleElementProps) {
   return (
-    <View className="bg-black rounded-md p-2 gap-2">
+    <View className="gap-2 rounded-md bg-black p-2">
       <View className="flex-row gap-2">
         <Element
           className="gap-0 p-0"
@@ -572,12 +572,12 @@ export function KingsOrderElement({ player }: GenericProps) {
   ];
 
   return (
-    <View className="bg-black rounded-md p-2 gap-2">
+    <View className="gap-2 rounded-md bg-black p-2">
       <View className="flex-row gap-2">
         {elements.map((element, i) => (
           <View
             key={i}
-            className="justify-center items-center bg-white"
+            className="items-center justify-center bg-white"
             style={{
               width: 35,
               height: 40,
@@ -614,10 +614,10 @@ export function AttributesTrackerElement({ player }: GenericProps) {
   const attributes = getAttributesTotals(player);
 
   return (
-    <View className="bg-black rounded-md p-2 gap-2">
+    <View className="gap-2 rounded-md bg-black p-2">
       <View className="flex-row gap-2">
         {["red", "black", "blue"].map((attribute, i) => (
-          <View key={attribute} className="justify-center items-center bg-white">
+          <View key={attribute} className="items-center justify-center bg-white">
             <VictoryPoint color={attribute as Attributes} value={attributes[attribute as Attributes]} />
           </View>
         ))}
