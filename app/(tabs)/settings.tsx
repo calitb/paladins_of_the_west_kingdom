@@ -6,8 +6,6 @@ import { twMerge } from "tailwind-merge";
 import { HapticButton } from "@/components/HapticButton";
 import { ActionIcons } from "@/components/paladines/Element";
 import { VictoryPoint } from "@/components/paladines/VictoryPointsItem";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import type { KingsOrderActions } from "@/lib/type";
 import { createIA, createPlayer } from "@/lib/utils";
 import { kingsOrdersAtom, playersAtom } from "@/state/atoms/game";
@@ -15,16 +13,12 @@ import { kingsOrdersAtom, playersAtom } from "@/state/atoms/game";
 export default function SettingsScreen() {
   const [players, setPlayers] = useAtom(playersAtom);
 
-  const colorScheme = useColorScheme();
-
   return (
     <SafeAreaView className="flex-1 gap-4">
       <ScrollView className="flex-1 bg-gray-400 px-10 py-5 items-center">
         <View className="flex-1 gap-10">
           <View className="items-center justify-between px-5 py-2 gap-4">
-            <Text className="text-xl" style={{ color: Colors[colorScheme ?? "light"].text }}>
-              Number of Players
-            </Text>
+            <Text className="text-xl">Number of Players</Text>
             <View className="flex-row gap-7">
               <PlayerButton
                 selected={players.length === 2 && !players[1].isHuman}
@@ -53,9 +47,7 @@ export default function SettingsScreen() {
             </View>
           </View>
           <View className="py-2 px-5 gap-4">
-            <Text className="text-xl" style={{ color: Colors[colorScheme ?? "light"].text }}>
-              King's Orders
-            </Text>
+            <Text className="text-xl">King's Orders</Text>
             <KingsOrders pv={4} level="lower" />
             <KingsOrders pv={6} level="medium" />
             <KingsOrders pv={8} level="upper" />
