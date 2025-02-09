@@ -39,7 +39,7 @@ export default function PlayerScreen({ playerIndex }: Props) {
 
   return (
     <SafeAreaView className="flex-1">
-      <ScrollView className="flex-1 items-center gap-10 bg-gray-400 px-10 py-5">
+      <ScrollView className="flex-1 items-center gap-10 bg-[#B7C4D6] px-10 py-5">
         <View className="gap-10">
           <View className="flex-row justify-between">
             {player.isHuman ? (

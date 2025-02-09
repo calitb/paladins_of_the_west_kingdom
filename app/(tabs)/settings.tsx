@@ -15,7 +15,7 @@ export default function SettingsScreen() {
 
   return (
     <SafeAreaView className="flex-1 gap-4">
-      <ScrollView className="flex-1 items-center bg-gray-400 px-10 py-5">
+      <ScrollView className="flex-1 items-center bg-[#B7C4D6] px-10 py-5">
         <View className="flex-1 gap-10">
           <View className="items-center justify-between gap-4 px-5 py-2">
             <Text className="text-xl">Number of Players</Text>
